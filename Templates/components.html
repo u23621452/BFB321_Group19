@@ -1,0 +1,50 @@
+{# Reusable components: import with  {% from 'components.html' import ... %} #}
+
+{% macro status_badge(status) -%}
+  {%- set map = {
+    'open':     ('secondary', 'circle',               'Open'),
+    'reserved': ('primary',   'bookmark-check-fill',  'Reserved'),
+    'shortage': ('danger',    'exclamation-triangle-fill', 'Shortage'),
+    'kitting':  ('warning',   'basket-fill',          'Kitting'),
+    'issued':   ('success',   'check-circle-fill',    'Issued'),
+    'ok':       ('success',   'check-circle-fill',    'In stock'),
+    'low':      ('warning',   'exclamation-circle-fill', 'Low'),
+    'critical': ('danger',    'exclamation-triangle-fill', 'Critical'),
+  } -%}
+  {%- set c = map.get(status, ('secondary', 'circle', status|title)) -%}
+  <span class="badge sf-badge text-bg-{{ c[0] }}"><i class="bi bi-{{ c[1] }} me-1" aria-hidden="true"></i>{{ c[2] }}</span>
+{%- endmacro %}
+
+{% macro kpi_card(label, value, icon, tone='primary', hint='') -%}
+  <div class="col-6 col-lg-3">
+    <div class="card sf-kpi h-100">
+      <div class="card-body d-flex align-items-center gap-3">
+        <span class="sf-kpi-icon text-bg-{{ tone }}"><i class="bi bi-{{ icon }}" aria-hidden="true"></i></span>
+        <div>
+          <div class="sf-kpi-value">{{ value }}</div>
+          <div class="sf-kpi-label">{{ label }}</div>
+          {% if hint %}<div class="small text-body-secondary">{{ hint }}</div>{% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+{%- endmacro %}
+
+{% macro page_header(title, subtitle='') -%}
+  <header class="mb-4">
+    <h1 class="h3 mb-1">{{ title }}</h1>
+    {% if subtitle %}<p class="text-body-secondary mb-0">{{ subtitle }}</p>{% endif %}
+  </header>
+{%- endmacro %}
+
+{# Sortable column header. kind: text | num | date #}
+{% macro sort_th(label, kind='text', cls='') -%}
+  <th scope="col" class="{{ cls }}" data-sort="{{ kind }}" aria-sort="none">
+    <button type="button" class="sf-sort-btn">{{ label }}<i class="bi bi-arrow-down-up ms-1" aria-hidden="true"></i></button>
+  </th>
+{%- endmacro %}
+
+{% macro empty_row(cols, message='Nothing to show.') -%}
+  <tr class="sf-empty-row d-none"><td colspan="{{ cols }}" class="text-center text-body-secondary py-4">
+    <i class="bi bi-inbox fs-3 d-block mb-1" aria-hidden="true"></i>{{ message }}</td></tr>
+{%- endmacro %}
