@@ -133,3 +133,47 @@ def test_reserve_job_adds_to_ledger_without_changing_the_original():
 def test_below_reorder_point():
     assert m.below_reorder_point(50, 10, 40) is True    # 40 free, at the limit
     assert m.below_reorder_point(50, 5, 40) is False    # 45 free, above it
+
+
+# ---------- planning window ----------
+
+def test_jobs_in_window():
+    today = date(2026, 9, 4)
+    jobs = [
+        {"id": "J3", "start_date": date(2026, 9, 11)},   # day 7: included
+        {"id": "J1", "start_date": date(2026, 9, 4)},    # today: included
+        {"id": "J4", "start_date": date(2026, 9, 12)},   # day 8: left out
+        {"id": "J0", "start_date": date(2026, 9, 3)},    # yesterday: left out
+        {"id": "J2", "start_date": date(2026, 9, 8)},
+    ]
+    ids = [job["id"] for job in m.jobs_in_window(jobs, today, 7)]
+    assert ids == ["J1", "J2", "J3"]          # sorted earliest first
+
+    ids_14 = [job["id"] for job in m.jobs_in_window(jobs, today, 14)]
+    assert ids_14[-1] == "J4"                 # the longer window now includes J4
+
+
+# ---------- KPIs ----------
+
+def test_inventory_record_accuracy():
+    system = {"A": 10, "B": 5, "C": 7, "D": 0}
+    physical = {"A": 10, "B": 5, "C": 6, "D": 0}
+    # 3 of 4 items match = 75 %
+    assert m.inventory_record_accuracy(system, physical) == 75
+
+
+def test_item_only_counted_on_the_shelf_is_a_mismatch():
+    # A matches, E is only on the shelf: 1 of 2 = 50 %
+    assert m.inventory_record_accuracy({"A": 1}, {"A": 1, "E": 3}) == 50
+
+
+def test_record_accuracy_needs_some_items():
+    with pytest.raises(ValueError):
+        m.inventory_record_accuracy({}, {})
+
+
+def test_percent_change():
+    # (10 - 45) / 45 * 100 = -77.78
+    assert m.percent_change(45, 10) == pytest.approx(-77.78, abs=0.01)
+    with pytest.raises(ValueError):
+        m.percent_change(0, 5)
