@@ -1,0 +1,31 @@
+{# Shared job detail modal - filled by static/js/app.js from window.SF.jobs #}
+<div class="modal fade" id="jobModal" tabindex="-1" aria-labelledby="jobModalTitle" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 class="modal-title h5" id="jobModalTitle">Job detail</h2>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <p class="mb-3" id="jobModalMeta"></p>
+        <div class="table-responsive">
+          <table class="table table-sm align-middle">
+            <caption class="visually-hidden">Bill of materials with stock check</caption>
+            <thead><tr>
+              <th scope="col">SKU</th><th scope="col">Description</th>
+              <th scope="col" class="text-end">Required</th>
+              <th scope="col" class="text-end">Free at check</th>
+              <th scope="col">Check</th>
+            </tr></thead>
+            <tbody id="jobModalLines"></tbody>
+          </table>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline-danger me-auto d-none" id="jobModalAlertBtn">
+          <i class="bi bi-bell me-1" aria-hidden="true"></i>Alert purchasing</button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
