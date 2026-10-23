@@ -1,0 +1,302 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Dashboard · StockFlow Engine</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <link rel="stylesheet" href="static/css/style.css">
+</head>
+
+<body>
+  <a class="visually-hidden-focusable skip-link" href="#main">Skip to main content</a>
+
+  <nav class="navbar navbar-expand-lg sf-navbar" aria-label="Main navigation">
+    <div class="container-xl">
+      <a class="navbar-brand d-flex align-items-center gap-2" href="dashboard.html">
+        <i class="bi bi-box-seam-fill" aria-hidden="true"></i> StockFlow
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav"
+        aria-controls="mainNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="mainNav">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page"  href="dashboard.html">
+              <i class="bi bi-house-door me-1" aria-hidden="true"></i>Dashboard
+            </a>
+          </li>
+          
+          <li class="nav-item">
+            <a class="nav-link"  href="job_files.html">
+              <i class="bi bi-journal-text me-1" aria-hidden="true"></i>Job files
+            </a>
+          </li>
+          
+          <li class="nav-item">
+            <a class="nav-link"  href="queue.html">
+              <i class="bi bi-clock-history me-1" aria-hidden="true"></i>Storeroom queue
+            </a>
+          </li>
+          
+          <li class="nav-item">
+            <a class="nav-link"  href="inventory.html">
+              <i class="bi bi-boxes me-1" aria-hidden="true"></i>Inventory
+            </a>
+          </li>
+          
+          <li class="nav-item">
+            <a class="nav-link"  href="scanner.html">
+              <i class="bi bi-upc-scan me-1" aria-hidden="true"></i>Shop-floor scanner
+            </a>
+          </li>
+          
+        </ul>
+        <span class="navbar-text d-flex align-items-center gap-2">
+          <i class="bi bi-person-circle" aria-hidden="true"></i> Reception
+          <span class="vr d-none d-lg-block"></span>
+          <time datetime="2026-09-04">
+            4 Sep 2026
+          </time>
+        </span>
+      </div>
+    </div>
+  </nav>
+
+  <main id="main" class="container-xl py-4">
+    
+<header class="mb-4">
+    <h1 class="h3 mb-1">Welcome, Reception</h1>
+    <p class="text-body-secondary mb-0">Overview of upcoming jobs and inventory status.</p>
+  </header>
+
+<section aria-label="Key figures" class="row g-3 mb-4">
+  <div class="col-6 col-lg-3">
+    <div class="card sf-kpi h-100">
+      <div class="card-body d-flex align-items-center gap-3">
+        <span class="sf-kpi-icon text-bg-primary"><i class="bi bi-journal-text" aria-hidden="true"></i></span>
+        <div>
+          <div class="sf-kpi-value">8</div>
+          <div class="sf-kpi-label">Open job files</div>
+          
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-6 col-lg-3">
+    <div class="card sf-kpi h-100">
+      <div class="card-body d-flex align-items-center gap-3">
+        <span class="sf-kpi-icon text-bg-danger"><i class="bi bi-exclamation-triangle" aria-hidden="true"></i></span>
+        <div>
+          <div class="sf-kpi-value">5</div>
+          <div class="sf-kpi-label">Items on shortage</div>
+          <div class="small text-body-secondary">across upcoming jobs</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-6 col-lg-3">
+    <div class="card sf-kpi h-100">
+      <div class="card-body d-flex align-items-center gap-3">
+        <span class="sf-kpi-icon text-bg-info"><i class="bi bi-bookmark-check" aria-hidden="true"></i></span>
+        <div>
+          <div class="sf-kpi-value">25</div>
+          <div class="sf-kpi-label">Reserved BOM lines</div>
+          
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-6 col-lg-3">
+    <div class="card sf-kpi h-100">
+      <div class="card-body d-flex align-items-center gap-3">
+        <span class="sf-kpi-icon text-bg-success"><i class="bi bi-calendar-week" aria-hidden="true"></i></span>
+        <div>
+          <div class="sf-kpi-value">6</div>
+          <div class="sf-kpi-label">Starting in 7 days</div>
+          
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="row g-4">
+  <section class="col-lg-8" aria-labelledby="todayHeading">
+    <div class="card h-100">
+      <div class="card-header d-flex justify-content-between align-items-center">
+        <h2 class="h6 mb-0" id="todayHeading">Today's job files</h2>
+        <a class="btn btn-sm btn-primary" href="job_files.html">
+          <i class="bi bi-plus-lg me-1" aria-hidden="true"></i>New job file</a>
+      </div>
+      <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0">
+          <caption class="visually-hidden">Job files created today</caption>
+          <thead><tr>
+            <th scope="col">Job #</th><th scope="col">Customer</th>
+            <th scope="col">Status</th><th scope="col" class="text-end">Action</th>
+          </tr></thead>
+          <tbody>
+            
+            <tr>
+              <td class="fw-semibold">J-2026-0431</td>
+              <td>Highveld Rail Services<div class="small text-body-secondary">500 kVA traction transformer</div></td>
+              <td><span class="badge sf-badge text-bg-primary"><i class="bi bi-bookmark-check-fill me-1" aria-hidden="true"></i>Reserved</span></td>
+              <td class="text-end">
+                <button type="button" class="btn btn-sm btn-outline-primary"
+                        data-job-detail="J-2026-0431">View</button>
+              </td>
+            </tr>
+            
+            <tr>
+              <td class="fw-semibold">J-2026-0432</td>
+              <td>Kopano Energy<div class="small text-body-secondary">24 V DC power cabinets x10</div></td>
+              <td><span class="badge sf-badge text-bg-primary"><i class="bi bi-bookmark-check-fill me-1" aria-hidden="true"></i>Reserved</span></td>
+              <td class="text-end">
+                <button type="button" class="btn btn-sm btn-outline-primary"
+                        data-job-detail="J-2026-0432">View</button>
+              </td>
+            </tr>
+            
+            <tr>
+              <td class="fw-semibold">J-2026-0433</td>
+              <td>Limpopo Power Co<div class="small text-body-secondary">Switchgear enclosure</div></td>
+              <td><span class="badge sf-badge text-bg-primary"><i class="bi bi-bookmark-check-fill me-1" aria-hidden="true"></i>Reserved</span></td>
+              <td class="text-end">
+                <button type="button" class="btn btn-sm btn-outline-primary"
+                        data-job-detail="J-2026-0433">View</button>
+              </td>
+            </tr>
+            
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <section class="col-lg-4" aria-labelledby="lowHeading">
+    <div class="card h-100">
+      <div class="card-header"><h2 class="h6 mb-0" id="lowHeading">Low stock alerts</h2></div>
+      <ul class="list-group list-group-flush">
+        
+        <li class="list-group-item d-flex justify-content-between align-items-center gap-2">
+          <div>
+            <div class="fw-semibold">CU-WIND-01</div>
+            <div class="small text-body-secondary">0 free · reorder at 14</div>
+          </div>
+          <span class="badge sf-badge text-bg-danger"><i class="bi bi-exclamation-triangle-fill me-1" aria-hidden="true"></i>Critical</span>
+        </li>
+        
+        <li class="list-group-item d-flex justify-content-between align-items-center gap-2">
+          <div>
+            <div class="fw-semibold">TX-CORE-03</div>
+            <div class="small text-body-secondary">0 free · reorder at 7</div>
+          </div>
+          <span class="badge sf-badge text-bg-danger"><i class="bi bi-exclamation-triangle-fill me-1" aria-hidden="true"></i>Critical</span>
+        </li>
+        
+        <li class="list-group-item d-flex justify-content-between align-items-center gap-2">
+          <div>
+            <div class="fw-semibold">INS-PAPER</div>
+            <div class="small text-body-secondary">8 free · reorder at 8</div>
+          </div>
+          <span class="badge sf-badge text-bg-warning"><i class="bi bi-exclamation-circle-fill me-1" aria-hidden="true"></i>Low</span>
+        </li>
+        
+        <li class="list-group-item d-flex justify-content-between align-items-center gap-2">
+          <div>
+            <div class="fw-semibold">FST-M8</div>
+            <div class="small text-body-secondary">0 free · reorder at 82</div>
+          </div>
+          <span class="badge sf-badge text-bg-danger"><i class="bi bi-exclamation-triangle-fill me-1" aria-hidden="true"></i>Critical</span>
+        </li>
+        
+        <li class="list-group-item d-flex justify-content-between align-items-center gap-2">
+          <div>
+            <div class="fw-semibold">PCB-PSU-12</div>
+            <div class="small text-body-secondary">0 free · reorder at 27</div>
+          </div>
+          <span class="badge sf-badge text-bg-danger"><i class="bi bi-exclamation-triangle-fill me-1" aria-hidden="true"></i>Critical</span>
+        </li>
+        
+        <li class="list-group-item d-flex justify-content-between align-items-center gap-2">
+          <div>
+            <div class="fw-semibold">SM-STL-2MM</div>
+            <div class="small text-body-secondary">0 free · reorder at 19</div>
+          </div>
+          <span class="badge sf-badge text-bg-danger"><i class="bi bi-exclamation-triangle-fill me-1" aria-hidden="true"></i>Critical</span>
+        </li>
+        
+        <li class="list-group-item d-flex justify-content-between align-items-center gap-2">
+          <div>
+            <div class="fw-semibold">CBL-10MM</div>
+            <div class="small text-body-secondary">15 free · reorder at 62</div>
+          </div>
+          <span class="badge sf-badge text-bg-danger"><i class="bi bi-exclamation-triangle-fill me-1" aria-hidden="true"></i>Critical</span>
+        </li>
+        
+      </ul>
+    </div>
+  </section>
+</div>
+
+
+<div class="modal fade" id="jobModal" tabindex="-1" aria-labelledby="jobModalTitle" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 class="modal-title h5" id="jobModalTitle">Job detail</h2>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <p class="mb-3" id="jobModalMeta"></p>
+        <div class="table-responsive">
+          <table class="table table-sm align-middle">
+            <caption class="visually-hidden">Bill of materials with stock check</caption>
+            <thead><tr>
+              <th scope="col">SKU</th><th scope="col">Description</th>
+              <th scope="col" class="text-end">Required</th>
+              <th scope="col" class="text-end">Free at check</th>
+              <th scope="col">Check</th>
+            </tr></thead>
+            <tbody id="jobModalLines"></tbody>
+          </table>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline-danger me-auto d-none" id="jobModalAlertBtn">
+          <i class="bi bi-bell me-1" aria-hidden="true"></i>Alert purchasing</button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+  </main>
+
+  <footer class="container-xl py-3 sf-footer">
+    <small>StockFlow Engine · Penbro Kelnick (Pty) Ltd · BFB 321 semester project ·
+      UI prototype with illustrative demo data (no backend yet)</small>
+  </footer>
+
+  <div class="toast-container position-fixed bottom-0 end-0 p-3" aria-live="polite" aria-atomic="true">
+    <div id="sfToast" class="toast align-items-center text-bg-dark border-0" role="status">
+      <div class="d-flex">
+        <div class="toast-body" id="sfToastBody"></div>
+        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"
+          aria-label="Close notification"></button>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script>window.SF = {"jobs": {"J-2026-0429": {"customer": "Highveld Rail Services", "description": "Signalling power supply x4", "lines": [{"desc": "Power supply PCB, 12 V", "free": null, "qty": 4, "short_by": 0, "sku": "PCB-PSU-12"}, {"desc": "Cable 10 mm squared, per metre", "free": null, "qty": 20, "short_by": 0, "sku": "CBL-10MM"}], "start": "2026-09-03", "status": "issued"}, "J-2026-0430": {"customer": "Cape Traction Systems", "description": "Auxiliary transformer rework", "lines": [{"desc": "Fastener set M8 (box of 100)", "free": 600, "qty": 50, "short_by": 0, "sku": "FST-M8"}, {"desc": "Insulating paper roll, 0.13 mm", "free": 20, "qty": 2, "short_by": 0, "sku": "INS-PAPER"}, {"desc": "Cable 10 mm squared, per metre", "free": 120, "qty": 10, "short_by": 0, "sku": "CBL-10MM"}], "start": "2026-09-04", "status": "kitting"}, "J-2026-0431": {"customer": "Highveld Rail Services", "description": "500 kVA traction transformer", "lines": [{"desc": "Copper winding wire, 25 kg coil", "free": 18, "qty": 6, "short_by": 0, "sku": "CU-WIND-01"}, {"desc": "Transformer core, CRGO laminated", "free": 4, "qty": 1, "short_by": 0, "sku": "TX-CORE-03"}, {"desc": "Insulating paper roll, 0.13 mm", "free": 18, "qty": 4, "short_by": 0, "sku": "INS-PAPER"}, {"desc": "Fastener set M8 (box of 100)", "free": 550, "qty": 120, "short_by": 0, "sku": "FST-M8"}], "start": "2026-09-05", "status": "reserved"}, "J-2026-0432": {"customer": "Kopano Energy", "description": "24 V DC power cabinets x10", "lines": [{"desc": "Power supply PCB, 12 V", "free": 20, "qty": 10, "short_by": 0, "sku": "PCB-PSU-12"}, {"desc": "Sheet steel 2 mm, 1250x2500", "free": 40, "qty": 12, "short_by": 0, "sku": "SM-STL-2MM"}, {"desc": "Fastener set M8 (box of 100)", "free": 430, "qty": 200, "short_by": 0, "sku": "FST-M8"}, {"desc": "Cable 10 mm squared, per metre", "free": 110, "qty": 30, "short_by": 0, "sku": "CBL-10MM"}], "start": "2026-09-06", "status": "reserved"}, "J-2026-0433": {"customer": "Limpopo Power Co", "description": "Switchgear enclosure", "lines": [{"desc": "Sheet steel 2 mm, 1250x2500", "free": 28, "qty": 20, "short_by": 0, "sku": "SM-STL-2MM"}, {"desc": "EPDM gasket strip, per metre", "free": 30, "qty": 8, "short_by": 0, "sku": "GSKT-EPDM"}, {"desc": "Fastener set M8 (box of 100)", "free": 230, "qty": 150, "short_by": 0, "sku": "FST-M8"}], "start": "2026-09-07", "status": "reserved"}, "J-2026-0434": {"customer": "Cape Traction Systems", "description": "Rectifier transformer x2", "lines": [{"desc": "Copper winding wire, 25 kg coil", "free": 12, "qty": 8, "short_by": 0, "sku": "CU-WIND-01"}, {"desc": "Transformer core, CRGO laminated", "free": 3, "qty": 2, "short_by": 0, "sku": "TX-CORE-03"}, {"desc": "Insulating paper roll, 0.13 mm", "free": 14, "qty": 6, "short_by": 0, "sku": "INS-PAPER"}, {"desc": "Cable 10 mm squared, per metre", "free": 80, "qty": 40, "short_by": 0, "sku": "CBL-10MM"}], "start": "2026-09-09", "status": "reserved"}, "J-2026-0435": {"customer": "Highveld Rail Services", "description": "Trackside PSU units", "lines": [{"desc": "Power supply PCB, 12 V", "free": 10, "qty": 15, "short_by": 5, "sku": "PCB-PSU-12"}, {"desc": "Cable 10 mm squared, per metre", "free": 40, "qty": 25, "short_by": 0, "sku": "CBL-10MM"}], "start": "2026-09-10", "status": "shortage"}, "J-2026-0436": {"customer": "Kopano Energy", "description": "Substation enclosures x6", "lines": [{"desc": "Sheet steel 2 mm, 1250x2500", "free": 8, "qty": 30, "short_by": 22, "sku": "SM-STL-2MM"}, {"desc": "Fastener set M8 (box of 100)", "free": 80, "qty": 300, "short_by": 220, "sku": "FST-M8"}, {"desc": "EPDM gasket strip, per metre", "free": 22, "qty": 12, "short_by": 0, "sku": "GSKT-EPDM"}], "start": "2026-09-13", "status": "shortage"}, "J-2026-0437": {"customer": "Limpopo Power Co", "description": "Distribution transformer", "lines": [{"desc": "Copper winding wire, 25 kg coil", "free": 4, "qty": 10, "short_by": 6, "sku": "CU-WIND-01"}, {"desc": "Transformer core, CRGO laminated", "free": 1, "qty": 2, "short_by": 1, "sku": "TX-CORE-03"}], "start": "2026-09-16", "status": "shortage"}}, "stock": {"CBL-10MM": {"available": 15, "bin": "C-04-02", "desc": "Cable 10 mm squared, per metre", "onHand": 120, "unit": "m"}, "CU-WIND-01": {"available": 0, "bin": "A-01-02", "desc": "Copper winding wire, 25 kg coil", "onHand": 18, "unit": "coil"}, "FST-M8": {"available": 0, "bin": "B-01-01", "desc": "Fastener set M8 (box of 100)", "onHand": 600, "unit": "box"}, "GSKT-EPDM": {"available": 10, "bin": "B-03-05", "desc": "EPDM gasket strip, per metre", "onHand": 30, "unit": "m"}, "INS-PAPER": {"available": 8, "bin": "A-03-04", "desc": "Insulating paper roll, 0.13 mm", "onHand": 20, "unit": "roll"}, "PCB-PSU-12": {"available": 0, "bin": "C-02-03", "desc": "Power supply PCB, 12 V", "onHand": 20, "unit": "pcs"}, "SM-STL-2MM": {"available": 0, "bin": "D-01-01", "desc": "Sheet steel 2 mm, 1250x2500", "onHand": 40, "unit": "sheet"}, "TX-CORE-03": {"available": 0, "bin": "A-02-01", "desc": "Transformer core, CRGO laminated", "onHand": 4, "unit": "pcs"}}, "today": "2026-09-04"};</script>
+  <script src="static/js/app.js"></script>
+  
+</body>
+
+</html>
