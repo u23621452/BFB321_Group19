@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% from "components.html" import status_badge, page_header, sort_th, empty_row %}
+{% set active_page = 'inventory' %}
+{% block title %}Inventory{% endblock %}
+
+{% block content %}
+{{ page_header('Inventory', 'Bin-level stock with soft reservations. Reorder points and suggested quantities come from the Python supply chain model.') }}
+
+<div class="card">
+  <div class="card-header d-flex flex-wrap gap-2 justify-content-between align-items-center">
+    <h2 class="h6 mb-0">Stock on hand</h2>
+    <div class="d-flex gap-2">
+      <label for="invSearch" class="visually-hidden">Search inventory</label>
+      <input type="search" id="invSearch" class="form-control form-control-sm" placeholder="Search SKU or description…"
+             data-filter-table="#invTable">
+      <label for="invStatus" class="visually-hidden">Filter by stock status</label>
+      <select id="invStatus" class="form-select form-select-sm" data-status-filter="#invTable">
+        <option value="">All stock</option>
+        <option value="critical">Critical</option>
+        <option value="low">Low</option>
+        <option value="ok">In stock</option>
+      </select>
+    </div>
+  </div>
+  <div class="table-responsive">
+    <table class="table table-hover align-middle mb-0 sortable" id="invTable">
+      <caption class="visually-hidden">Inventory by SKU, sortable by column</caption>
+      <thead><tr>
+        {{ sort_th('SKU') }}
+        {{ sort_th('Bin') }}
+        {{ sort_th('On hand', 'num', 'text-end') }}
+        {{ sort_th('Reserved', 'num', 'text-end') }}
+        {{ sort_th('Available', 'num', 'text-end') }}
+        {{ sort_th('Reorder pt', 'num', 'text-end') }}
+        {{ sort_th('Suggested order', 'num', 'text-end') }}
+        {{ sort_th('Status') }}
+      </tr></thead>
+      <tbody>
+        {% for r in inventory %}
+        <tr data-status="{{ r.status }}">
+          <td><span class="fw-semibold">{{ r.sku }}</span><div class="small text-body-secondary">{{ r.desc }}</div></td>
+          <td>{{ r.bin }}</td>
+          <td class="text-end" data-sort-value="{{ r.on_hand }}">{{ r.on_hand }} <span class="text-body-secondary small">{{ r.unit }}</span></td>
+          <td class="text-end" data-sort-value="{{ r.reserved }}">{{ r.reserved|int }}</td>
+          <td class="text-end fw-semibold" data-sort-value="{{ r.available }}">{{ r.available|int }}</td>
+          <td class="text-end" data-sort-value="{{ r.rop }}">{{ r.rop|round|int }}</td>
+          <td class="text-end" data-sort-value="{{ r.order_qty }}">{{ r.order_qty }}
+            <div class="small text-body-secondary">{{ r.lead_time }} d lead</div></td>
+          <td data-sort-value="{{ r.status }}">{{ status_badge(r.status) }}</td>
+        </tr>
+        {% endfor %}
+        {{ empty_row(8, 'No items match your search.') }}
+      </tbody>
+    </table>
+  </div>
+  <div class="card-footer small text-body-secondary">
+    Reorder point = demand × lead time + safety stock (95 % service level).
+    Suggested order = EOQ rounded to supplier minimum and pack size.
+  </div>
+</div>
+{% endblock %}
