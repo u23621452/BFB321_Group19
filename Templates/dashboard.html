@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+{% from "components.html" import status_badge, kpi_card, page_header, empty_row %}
+{% set active_page = 'dashboard' %}
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+{{ page_header('Welcome, Reception', "Overview of upcoming jobs and inventory status.") }}
+
+<section aria-label="Key figures" class="row g-3 mb-4">
+  {{ kpi_card('Open job files', kpis.open_jobs, 'journal-text', 'primary') }}
+  {{ kpi_card('Items on shortage', kpis.shortage_items, 'exclamation-triangle', 'danger', 'across upcoming jobs') }}
+  {{ kpi_card('Reserved BOM lines', kpis.reserved_lines, 'bookmark-check', 'info') }}
+  {{ kpi_card('Starting in 7 days', kpis.upcoming, 'calendar-week', 'success') }}
+</section>
+
+<div class="row g-4">
+  <section class="col-lg-8" aria-labelledby="todayHeading">
+    <div class="card h-100">
+      <div class="card-header d-flex justify-content-between align-items-center">
+        <h2 class="h6 mb-0" id="todayHeading">Today's job files</h2>
+        <a class="btn btn-sm btn-primary" href="{{ url_for('job_files') }}">
+          <i class="bi bi-plus-lg me-1" aria-hidden="true"></i>New job file</a>
+      </div>
+      <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0">
+          <caption class="visually-hidden">Job files created today</caption>
+          <thead><tr>
+            <th scope="col">Job #</th><th scope="col">Customer</th>
+            <th scope="col">Status</th><th scope="col" class="text-end">Action</th>
+          </tr></thead>
+          <tbody>
+            {% for j in jobs if j.created == today %}
+            <tr>
+              <td class="fw-semibold">{{ j.id }}</td>
+              <td>{{ j.customer }}<div class="small text-body-secondary">{{ j.description }}</div></td>
+              <td>{{ status_badge(j.status) }}</td>
+              <td class="text-end">
+                <button type="button" class="btn btn-sm btn-outline-primary"
+                        data-job-detail="{{ j.id }}">View</button>
+              </td>
+            </tr>
+            {% else %}
+            <tr><td colspan="4" class="text-center text-body-secondary py-4">No job files opened today.</td></tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <section class="col-lg-4" aria-labelledby="lowHeading">
+    <div class="card h-100">
+      <div class="card-header"><h2 class="h6 mb-0" id="lowHeading">Low stock alerts</h2></div>
+      <ul class="list-group list-group-flush">
+        {% for r in inventory if r.status != 'ok' %}
+        <li class="list-group-item d-flex justify-content-between align-items-center gap-2">
+          <div>
+            <div class="fw-semibold">{{ r.sku }}</div>
+            <div class="small text-body-secondary">{{ r.available|int }} free · reorder at {{ r.rop|round|int }}</div>
+          </div>
+          {{ status_badge(r.status) }}
+        </li>
+        {% else %}
+        <li class="list-group-item text-body-secondary">All stock above reorder points.</li>
+        {% endfor %}
+      </ul>
+    </div>
+  </section>
+</div>
+
+{% include "_job_modal.html" %}
+{% endblock %}
