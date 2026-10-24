@@ -1,0 +1,113 @@
+{% extends "base.html" %}
+{% from "components.html" import page_header %}
+{% set active_page = 'scanner' %}
+{% block title %}Shop-floor scanner{% endblock %}
+
+{% block content %}
+{{ page_header('Shop-floor scanner', 'Touch-friendly view for operators on a phone or rugged tablet. Scan the bin label, confirm the pick, and the ledger updates.') }}
+
+<div class="sf-phone mx-auto">
+  <div class="card sf-scan-card">
+    <div class="card-body">
+      <label for="scanJob" class="form-label fw-semibold">Work order</label>
+      <select id="scanJob" class="form-select form-select-lg mb-3">
+        {% for j in jobs if j.status in ('reserved', 'kitting', 'shortage') %}
+        <option value="{{ j.id }}"{% if j.status == 'kitting' %} selected{% endif %}>{{ j.id }} · {{ j.customer }}</option>
+        {% endfor %}
+      </select>
+
+      <div class="sf-viewfinder text-center mb-3" aria-hidden="true">
+        <div class="sf-corners"><i class="bi bi-upc-scan"></i></div>
+        <div class="small text-body-secondary mt-2">Point the camera at the bin label</div>
+      </div>
+      <button type="button" class="btn btn-primary btn-lg w-100 mb-3" id="scanBtn">
+        <i class="bi bi-camera me-2" aria-hidden="true"></i>Scan barcode</button>
+
+      <div class="sf-or" role="separator"><span>or</span></div>
+
+      <form id="manualForm" class="needs-validation" novalidate>
+        <label for="manualCode" class="form-label">Enter product code manually</label>
+        <div class="input-group has-validation">
+          <input type="text" class="form-control form-control-lg text-uppercase" id="manualCode"
+                 placeholder="e.g. CU-WIND-01" required autocomplete="off" autocapitalize="characters">
+          <button class="btn btn-outline-primary" type="submit">Find</button>
+          <div class="invalid-feedback" id="manualError">Unknown product code. Check the bin label.</div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <section id="pickPanel" class="card mt-3 d-none" aria-labelledby="pickTitle" aria-live="polite">
+    <div class="card-body">
+      <div class="d-flex justify-content-between align-items-start">
+        <div>
+          <h2 class="h5 mb-0" id="pickTitle"></h2>
+          <div class="text-body-secondary" id="pickDesc"></div>
+        </div>
+        <span class="badge text-bg-secondary" id="pickBin"></span>
+      </div>
+      <div class="alert alert-info py-2 mt-3 mb-3" id="pickNeed"></div>
+      <label for="pickQty" class="form-label">Quantity picked</label>
+      <div class="input-group input-group-lg mb-3">
+        <button class="btn btn-outline-secondary" type="button" id="qtyMinus" aria-label="Decrease quantity">−</button>
+        <input type="number" class="form-control text-center" id="pickQty" min="1" value="1" inputmode="numeric">
+        <button class="btn btn-outline-secondary" type="button" id="qtyPlus" aria-label="Increase quantity">+</button>
+      </div>
+      <div class="d-flex gap-2">
+        <button type="button" class="btn btn-success btn-lg flex-grow-1" id="confirmPick">
+          <i class="bi bi-check2-circle me-1" aria-hidden="true"></i>Confirm pick</button>
+        <button type="button" class="btn btn-outline-secondary btn-lg" id="cancelPick">Cancel</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="card mt-3" aria-labelledby="histTitle">
+    <div class="card-header d-flex justify-content-between align-items-center">
+      <h2 class="h6 mb-0" id="histTitle">Picked this session</h2>
+      <button type="button" class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#requestModal">
+        <i class="bi bi-plus-circle me-1" aria-hidden="true"></i>Request material</button>
+    </div>
+    <ul class="list-group list-group-flush" id="pickHistory">
+      <li class="list-group-item text-body-secondary" id="histEmpty">No picks yet.</li>
+    </ul>
+  </section>
+</div>
+
+<div class="modal fade" id="requestModal" tabindex="-1" aria-labelledby="requestTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <form class="modal-content needs-validation" id="requestForm" novalidate>
+      <div class="modal-header">
+        <h2 class="modal-title h5" id="requestTitle">Request extra material</h2>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="mb-3">
+          <label for="reqSku" class="form-label">Item</label>
+          <select id="reqSku" class="form-select" required>
+            <option value="" selected disabled>Choose an item…</option>
+            {% for r in inventory %}<option value="{{ r.sku }}">{{ r.sku }} – {{ r.desc }}</option>{% endfor %}
+          </select>
+          <div class="invalid-feedback">Choose the item you need.</div>
+        </div>
+        <div class="mb-3">
+          <label for="reqQty" class="form-label">Quantity</label>
+          <input type="number" class="form-control" id="reqQty" min="1" step="1" required inputmode="numeric">
+          <div class="invalid-feedback">Enter a whole number of 1 or more.</div>
+        </div>
+        <div>
+          <label for="reqNote" class="form-label">Reason <span class="text-body-secondary">(optional)</span></label>
+          <input type="text" class="form-control" id="reqNote" maxlength="120">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+        <button type="submit" class="btn btn-primary">Send to storeroom</button>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/scanner.js') }}"></script>
+{% endblock %}
