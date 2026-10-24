@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+{% from "components.html" import status_badge, page_header, sort_th, empty_row %}
+{% set active_page = 'queue' %}
+{% block title %}Storeroom queue{% endblock %}
+
+{% block content %}
+{{ page_header('Storeroom queue', 'Advance view of scheduled jobs so shortages are caught days before assembly, not the afternoon before.') }}
+
+<div class="d-flex flex-wrap gap-3 justify-content-between align-items-center mb-3">
+  <div class="btn-group" role="group" aria-label="Planning window">
+    <input type="radio" class="btn-check" name="window" id="win7" value="7" autocomplete="off" checked>
+    <label class="btn btn-outline-primary" for="win7">Next 7 days</label>
+    <input type="radio" class="btn-check" name="window" id="win14" value="14" autocomplete="off">
+    <label class="btn btn-outline-primary" for="win14">Next 14 days</label>
+  </div>
+  <div class="d-flex align-items-center gap-3">
+    <span class="text-body-secondary" id="queueCount" aria-live="polite"></span>
+    <div class="form-check form-switch mb-0">
+      <input class="form-check-input" type="checkbox" role="switch" id="onlyShort" data-status-toggle="#queueTable" data-status-value="shortage">
+      <label class="form-check-label" for="onlyShort">Shortages only</label>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="table-responsive">
+    <table class="table table-hover align-middle mb-0 sortable" id="queueTable">
+      <caption class="visually-hidden">Scheduled jobs for the selected planning window</caption>
+      <thead><tr>
+        {{ sort_th('Job #') }}
+        {{ sort_th('Customer') }}
+        {{ sort_th('Starts', 'date') }}
+        {{ sort_th('In', 'num', 'text-end') }}
+        {{ sort_th('Lines', 'num', 'text-end') }}
+        {{ sort_th('Status') }}
+        <th scope="col" class="text-end">Action</th>
+      </tr></thead>
+      <tbody>
+        {% for j in jobs if j.status not in ('issued',) and j.days_to_start >= 0 %}
+        <tr data-status="{{ j.status }}" data-days="{{ j.days_to_start }}">
+          <td class="fw-semibold">{{ j.id }}
+            {% if j.priority == 'Urgent' %}<span class="badge text-bg-danger ms-1">Urgent</span>{% endif %}</td>
+          <td>{{ j.customer }}<div class="small text-body-secondary">{{ j.description }}</div></td>
+          <td data-sort-value="{{ j.start_date.isoformat() }}">{{ j.start_date.strftime('%a') }} {{ j.start_date.day }} {{ j.start_date.strftime('%b') }}</td>
+          <td class="text-end" data-sort-value="{{ j.days_to_start }}">{{ j.days_to_start }} d</td>
+          <td class="text-end" data-sort-value="{{ j.bom|length }}">{{ j.bom|length }}</td>
+          <td data-sort-value="{{ j.status }}">{{ status_badge(j.status) }}
+            {% if j.shortages %}<div class="small text-danger mt-1">{{ j.shortages|length }} short</div>{% endif %}</td>
+          <td class="text-end"><button type="button" class="btn btn-sm btn-outline-primary"
+                data-job-detail="{{ j.id }}">Open</button></td>
+        </tr>
+        {% endfor %}
+        {{ empty_row(7, 'No jobs in this window.') }}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+{% include "_job_modal.html" %}
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/queue.js') }}"></script>
+{% endblock %}
