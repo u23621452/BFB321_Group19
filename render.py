@@ -8,12 +8,14 @@ from jinja2 import Environment, FileSystemLoader
 import sample_data as data
 
 HERE = Path(__file__).parent
-DIST = HERE / "dist"
+DIST = HERE / "docs"
 
 PAGES = {
     "dashboard": "dashboard.html",
     "job_files": "job_files.html",
+    "queue": "queue.html",
     "inventory": "inventory.html",
+    "scanner": "scanner.html",
 }
 
 NAV_ITEMS = [
