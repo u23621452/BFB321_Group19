@@ -8,7 +8,7 @@ from jinja2 import Environment, FileSystemLoader
 import sample_data as data
 
 HERE = Path(__file__).parent
-DIST = HERE / "docs"
+DIST = HERE / "dist"
 
 PAGES = {
     "dashboard": "dashboard.html",
