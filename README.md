@@ -13,7 +13,7 @@ visible days in advance.
 ## Group members
 
 | Name | Student number |
-|------|----------------|
+
 | Heinrich Willem Fourie | u23621452 |
 | Tiaan Behr | u22710443 |
 
