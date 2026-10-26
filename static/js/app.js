@@ -1,5 +1,6 @@
 /* StockFlow - code shared by every page. */
 
+window.SF = JSON.parse(document.body.dataset.sf);
 
 // Make an HTML element:
 SF.el = function (tag, attributes, children) {
