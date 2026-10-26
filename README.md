@@ -52,8 +52,8 @@ dist/            the built website (served by GitHub Pages)
 The built pages are already included in the `dist` folder, so no installation
 is needed:
 
-1. Click **Code → Download ZIP** on this repository and unzip it.
-2. Open `dist/index.html` in a web browser.
+1. Click **Code → Download ZIP** on this repository and unzip/extract it.
+2. Open `dist/index.html` or `dist/dashboard.html` in a web browser.
 
 An internet connection is needed.
 Note clicking an HTML file on GitHub only shows its source code. It must
@@ -70,9 +70,11 @@ from a CDN).
 
 3. Build the pages (5 pages should be built): "python render.py"
 
-4. Open `dist/index.html` or `dist/dashboard.html` in a web browser.
+4. Reveal `dist/index.html` or `dist/dashboard.html` in file explorer.
 
-5. The built pages are already included, so you can skip steps 1–3 and open dist/index.html directly
+5. Open `dist/index.html` or `dist/dashboard.html` from file explorer
+
+6. The built pages are already included, so you can skip steps 1–5 and open dist/index.html or dist/dashboard directly from extracted folder.
 
 ## Notes
 
