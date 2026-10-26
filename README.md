@@ -29,7 +29,7 @@ This repository covers the semester project:
   - Inventory
   - Shop-floor scanner (mobile layout)
 - **Supply chain model (Python):** `models/stock_model.py`, a standalone
-  module with no Flask or database code. It provides:
+  module with no Flask or database code. It does the following:
   - EOQ, orders per year and total annual cost
   - safety stock and reorder point
   - shortage checking and soft reservation against a job's Bill of Materials
@@ -39,7 +39,6 @@ This repository covers the semester project:
 
 ## Project structure
 
-```
 models/          supply chain calculations (independent of Flask)
 tests/           unit tests for the model
 templates/       Jinja2 HTML pages
@@ -47,7 +46,7 @@ static/          CSS and JavaScript
 sample_data.py   demo data, calculated with the model
 render.py        builds the pages into the dist/ folder
 dist/            the built website (served by GitHub Pages)
-```
+
 ## How to view the application
 
 The built pages are already included in the `dist` folder, so no installation
@@ -57,7 +56,7 @@ is needed:
 2. Open `dist/index.html` in a web browser.
 
 An internet connection is needed.
-Note that clicking an HTML file on GitHub only shows its source code. It must
+Note clicking an HTML file on GitHub only shows its source code. It must
 be opened from a downloaded copy.
 
 ## Setup and running
@@ -69,7 +68,7 @@ from a CDN).
 
 2. Run the unit tests (24 should pass): "python -m pytest"
 
-3. Build the pages: "python render.py"
+3. Build the pages (5 pages should be built): "python render.py"
 
 4. Open `dist/index.html` or `dist/dashboard.html` in a web browser.
 
