@@ -1,6 +1,6 @@
 """Demo data for the StockFlow pages.
 
-Everything here is made up. The numbers you see on screen (shortages,
+Everything is made up. The numbers you see on screen (shortages,
 reorder points, suggested order quantities) are calculated by
 models/stock_model.py, not typed in.
 """
@@ -8,12 +8,12 @@ from datetime import date, timedelta
 
 from models import stock_model as sm
 
-# The "current date" for the demo, so the screens always look the same.
+# The current date for the demo.
 TODAY = date(2026, 9, 4)
 
-# ---------- stock items ----------
+# stock items
 # One dictionary per item.
-#   on_hand       = quantity on the shelf now
+#   on_hand       = quantity on the shelf
 #   daily_demand  = average units used per day
 #   daily_std     = how much daily demand varies
 #   lead_time     = days the supplier takes to deliver
@@ -49,7 +49,7 @@ STOCK = {
                   "annual_demand": 360, "order_cost": 180, "holding_cost": 6, "min_order": 20, "pack": 20},
 }
 
-# ---------- job files ----------
+# job files
 # created_days / start_days = days before (-) or after (+) TODAY.
 # state: "open" (not started), "kitting" (being picked now), "issued" (done).
 JOB_LIST = [
@@ -114,13 +114,13 @@ def build_jobs():
             # Already collected, so it no longer holds any reservation.
             job["status"] = "issued"
         else:
-            # Which items are short, given what earlier jobs have reserved?
+            # Which items are short after what earlier jobs have reserved?
             job["shortages"] = sm.check_job_availability(job_info["bom"], on_hand, reserved)
             short_by = {}
             for s in job["shortages"]:
                 short_by[s["sku"]] = s["short_by"]
 
-            # One line per item for the job pop-up.
+            # One line per item for the job
             for sku, qty in job_info["bom"].items():
                 job["lines"].append({
                     "sku": sku,
@@ -130,7 +130,7 @@ def build_jobs():
                     "short_by": short_by.get(sku, 0),
                 })
 
-            # Reserve this job's items so the next job sees less free stock.
+            # Reserve this jobs items so the next job sees less free stock.
             reserved = sm.reserve_job(job_info["bom"], reserved)
 
             if job_info["state"] == "kitting":
@@ -221,7 +221,7 @@ def js_payload():
     for job in JOBS:
         lines = job["lines"]
         if not lines:
-            # Issued jobs have no stock check, so show the plain materials list.
+            # Issued jobs have no stock check, show the plain materials list.
             for sku, qty in job["bom"].items():
                 lines.append({"sku": sku, "desc": STOCK[sku]["desc"], "qty": qty,
                               "free": None, "short_by": 0})
