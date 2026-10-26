@@ -1,10 +1,7 @@
-/* StockFlow - code shared by every page.
-   The data (SF.jobs, SF.stock ...) comes from base.html, which puts it in
-   the variable SF before this file runs. */
+/* StockFlow - code shared by every page. */
 
-// ---------- small helpers other files also use ----------
 
-// Make an HTML element:  SF.el("div", {class: "x", text: "Hi"}, [child1, child2])
+// Make an HTML element:
 SF.el = function (tag, attributes, children) {
   var element = document.createElement(tag);
   attributes = attributes || {};
@@ -25,7 +22,7 @@ SF.el = function (tag, attributes, children) {
   return element;
 };
 
-// status -> [Bootstrap colour, icon name, label]
+// status
 var STATUS_STYLES = {
   open:     ["secondary", "circle", "Open"],
   reserved: ["primary", "bookmark-check-fill", "Reserved"],
@@ -34,7 +31,7 @@ var STATUS_STYLES = {
   issued:   ["success", "check-circle-fill", "Issued"]
 };
 
-// Make a coloured status label, like the "Shortage" badge.
+// Make a coloured status label
 SF.badge = function (status) {
   var style = STATUS_STYLES[status] || ["secondary", "circle", status];
   var badge = SF.el("span", { class: "badge sf-badge text-bg-" + style[0] });
@@ -50,11 +47,9 @@ SF.toast = function (message) {
   toast.show();
 };
 
+// Filtering
 
-// ---------- filtering (search box, status drop-down, switches) ----------
-
-// Each table remembers its current filters in table.filters, e.g.
-//   { search: "copper", status: "critical", only: "shortage", days: 7 }
+// Each table remembers its current filters in table.filters
 // This function hides every row that does not match all of them.
 SF.applyFilters = function (table) {
   var filters = table.filters || {};
@@ -90,7 +85,6 @@ SF.applyFilters = function (table) {
     emptyRow.classList.toggle("d-none", visibleCount !== 0);
   }
 
-  // Tell anyone listening (queue.js) how many rows are showing.
   table.dispatchEvent(new CustomEvent("sf:filtered", { detail: { visible: visibleCount } }));
 };
 
@@ -117,7 +111,7 @@ function setUpFilters() {
     });
   });
 
-  // On/off switches such as "Shortages only"
+  // On/off switches such
   var switches = document.querySelectorAll("[data-status-toggle]");
   switches.forEach(function (checkbox) {
     var table = document.querySelector(checkbox.dataset.statusToggle);
@@ -130,10 +124,9 @@ function setUpFilters() {
 }
 
 
-// ---------- sorting (click a column heading) ----------
+// Sorting
 
-// Get the value to sort a cell by. A cell can set data-sort-value="..."
-// when its visible text is not the right thing to sort on (e.g. a date).
+// Get the value to sort a cell by.
 function getSortValue(row, columnIndex, kind) {
   var cell = row.children[columnIndex];
   var text = cell.dataset.sortValue !== undefined ? cell.dataset.sortValue : cell.textContent.trim();
@@ -171,7 +164,7 @@ function setUpSorting() {
           return direction === "ascending" ? result : -result;
         });
 
-        // Put the rows back in the new order (before the "empty" row).
+        // Put the rows back in the new order.
         rows.forEach(function (row) { body.insertBefore(row, emptyRow); });
       });
     });
@@ -179,18 +172,18 @@ function setUpSorting() {
 }
 
 
-// ---------- the job pop-up ----------
+// The job pop-up
 
 function setUpJobPopup() {
   var popupElement = document.getElementById("jobModal");
   if (!popupElement) {
-    return;   // this page has no pop-up
+    return;
   }
   var popup = bootstrap.Modal.getOrCreateInstance(popupElement);
   var alertButton = document.getElementById("jobModalAlertBtn");
   var openJobId = null;
 
-  // Fill the pop-up with one job's details and show it.
+  // Fill the pop-up with one job's details
   SF.openJob = function (jobId) {
     var job = SF.jobs[jobId];
     if (!job) {
@@ -242,7 +235,7 @@ function setUpJobPopup() {
     SF.toast("Shortage alert sent to purchasing for " + openJobId + " (demo).");
   });
 
-  // Any button with data-job-detail="J-2026-0431" opens that job.
+  // Any button with data-job-detail opens that job.
   document.addEventListener("click", function (event) {
     var button = event.target.closest("[data-job-detail]");
     if (button) {
@@ -251,8 +244,6 @@ function setUpJobPopup() {
   });
 }
 
-
-// ---------- start everything once the page has loaded ----------
 
 document.addEventListener("DOMContentLoaded", function () {
   setUpFilters();

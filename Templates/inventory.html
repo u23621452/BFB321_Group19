@@ -4,7 +4,6 @@
 {% block title %}Inventory{% endblock %}
 
 {% block content %}
-{{ page_header('Inventory', 'Bin-level stock with soft reservations. Reorder points and suggested quantities come from the Python supply chain model.') }}
 
 <div class="card">
   <div class="card-header d-flex flex-wrap gap-2 justify-content-between align-items-center">
@@ -52,10 +51,6 @@
         {{ empty_row(8, 'No items match your search.') }}
       </tbody>
     </table>
-  </div>
-  <div class="card-footer small text-body-secondary">
-    Reorder point = demand × lead time + safety stock (95 % service level).
-    Suggested order = EOQ rounded to supplier minimum and pack size.
   </div>
 </div>
 {% endblock %}

@@ -4,7 +4,7 @@
 {% block title %}Dashboard{% endblock %}
 
 {% block content %}
-{{ page_header('Welcome, Reception', "Overview of upcoming jobs and inventory status.") }}
+{{ page_header('Welcome', "Overview of upcoming jobs and inventory status.") }}
 
 <section aria-label="Key figures" class="row g-3 mb-4">
   {{ kpi_card('Open job files', kpis.open_jobs, 'journal-text', 'primary') }}

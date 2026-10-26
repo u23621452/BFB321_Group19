@@ -1,11 +1,10 @@
-/* The "New job file" form on the Job files page.
-   - add and remove materials (BOM) lines
+/* The New job file form on the Job files page does the following,
+   - add and remove materials lines
    - check the fields and show messages
-   - preview whether the stock covers the job
+   - check whether the stock covers the job
 
    The preview repeats the logic of models/stock_model.py in JavaScript so
-   the demo works without a server. In the final project the server does
-   this check and the browser just shows the answer. */
+   the demo works without a server. */
 
 var form = document.getElementById("jobForm");
 var linesBox = document.getElementById("bomLines");
@@ -15,9 +14,9 @@ var jobTable = document.getElementById("jobTable");
 var lineCounter = 0;
 
 
-// ---------- materials lines ----------
+// Materials lines 
 
-// Add one blank line: an item drop-down, a quantity box and a delete button.
+// Add one blank line
 function addLine() {
   lineCounter++;
   var n = lineCounter;
@@ -58,7 +57,7 @@ function addLine() {
   linesBox.append(row);
 }
 
-// Read all the lines into a list like [{sku: "FST-M8", qty: 100, select: <element>}, ...]
+// Read all the lines into a list
 function readLines() {
   var rows = linesBox.querySelectorAll(".sf-bom-row");
   var lines = [];
@@ -71,13 +70,13 @@ function readLines() {
 }
 
 
-// ---------- checking the form ----------
+// Checking the form
 
 // Returns true when everything is filled in correctly.
 function formIsValid() {
   var lines = readLines();
 
-  // The same item must not appear on two lines.
+  // Make sure the same item does not appear twice.
   var seen = {};
   lines.forEach(function (line) {
     var isDuplicate = line.sku !== "" && seen[line.sku] === true;
@@ -85,7 +84,7 @@ function formIsValid() {
     seen[line.sku] = true;
   });
 
-  // The start date must not be in the past.
+  // Make sure start date is not in the past.
   var startDate = document.getElementById("startDate");
   var isPast = startDate.value !== "" && startDate.value < SF.today;
   startDate.setCustomValidity(isPast ? "past" : "");
@@ -98,7 +97,7 @@ function formIsValid() {
   return form.checkValidity() && !noLines;
 }
 
-// Work out the next job number, e.g. J-2026-0438.
+// Work out the next job number.
 function nextJobId() {
   var highest = 0;
   for (var id in SF.jobs) {
@@ -111,7 +110,7 @@ function nextJobId() {
 }
 
 
-// ---------- saving the job (demo only) ----------
+// Saving the job (demo only)
 
 form.addEventListener("submit", function (event) {
   event.preventDefault();               // stop the page reloading
@@ -125,7 +124,7 @@ form.addEventListener("submit", function (event) {
     return;
   }
 
-  // Stock check: for each line, how much is free and is it enough?
+  // Stock check
   var lines = readLines().map(function (line) {
     var free = SF.stock[line.sku].available;
     return {
@@ -151,7 +150,7 @@ form.addEventListener("submit", function (event) {
     status: status, lines: lines
   };
 
-  // Reserve the stock: free stock goes down by the quantity used.
+  // Reserve the stock
   lines.forEach(function (line) {
     SF.stock[line.sku].available = Math.max(line.free - line.qty, 0);
   });
@@ -190,7 +189,7 @@ form.addEventListener("submit", function (event) {
   SF.toast(jobId + " captured (demo - not saved to a server).");
 });
 
-// When the form is cleared, go back to one blank materials line.
+// When the form is cleared, go back to one blank material line.
 form.addEventListener("reset", function () {
   form.classList.remove("was-validated");
   resultBox.replaceChildren();
