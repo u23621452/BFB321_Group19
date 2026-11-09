@@ -44,3 +44,16 @@ def paginate_list(items, page, per_page):
         "total": total,
         "pages": max((total + per_page - 1) // per_page, 1),
     }
+
+
+def paginate_query(query, page, per_page, convert):
+    """Run a database query one page at a time. `convert` turns each row
+    into the dictionary we send back."""
+    result = query.paginate(page=page, per_page=per_page, error_out=False)
+    return {
+        "items": [convert(row) for row in result.items],
+        "page": page,
+        "per_page": per_page,
+        "total": result.total,
+        "pages": max(result.pages, 1),
+    }
