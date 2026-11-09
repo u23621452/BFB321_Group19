@@ -34,9 +34,13 @@ def create_app(config_name=None):
     setup_logging(app)
     register_error_handlers(app)
 
-    from app.blueprints import auth, inventory, jobs
+    from app.blueprints import auth, inventory, jobs, queue, picks, requests, kpis
     app.register_blueprint(auth.bp)
     app.register_blueprint(inventory.bp)
     app.register_blueprint(jobs.bp)
+    app.register_blueprint(queue.bp)
+    app.register_blueprint(picks.bp)
+    app.register_blueprint(requests.bp)
+    app.register_blueprint(kpis.bp)
 
     return app
