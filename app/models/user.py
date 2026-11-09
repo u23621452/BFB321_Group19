@@ -1,3 +1,4 @@
+from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
 
 from app.extensions import db
@@ -6,7 +7,7 @@ from app.models.base import AuditMixin
 ROLES = ("reception", "storeroom", "operator", "admin")
 
 
-class User(AuditMixin, db.Model):
+class User(UserMixin, AuditMixin, db.Model):
     __tablename__ = "users"
 
     id = db.Column(db.Integer, primary_key=True)
