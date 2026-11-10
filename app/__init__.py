@@ -12,7 +12,8 @@ def create_app(config_name=None):
     """Build and return the Flask app. Tests can pass in 'testing'."""
     config_name = config_name or os.environ.get("APP_ENV", "development")
 
-    app = Flask(__name__)
+    # the CSS and JavaScript live in the static/ folder in the main folder
+    app = Flask(__name__, static_folder="../static")
     app.config.from_object(config[config_name])
 
     db.init_app(app)
@@ -35,6 +36,7 @@ def create_app(config_name=None):
     register_error_handlers(app)
 
     from app.blueprints import auth, inventory, jobs, queue, picks, requests, kpis
+    from app import pages
     app.register_blueprint(auth.bp)
     app.register_blueprint(inventory.bp)
     app.register_blueprint(jobs.bp)
@@ -42,5 +44,6 @@ def create_app(config_name=None):
     app.register_blueprint(picks.bp)
     app.register_blueprint(requests.bp)
     app.register_blueprint(kpis.bp)
+    app.register_blueprint(pages.bp)
 
     return app
