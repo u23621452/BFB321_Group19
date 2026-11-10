@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+<header class="mb-4">
+  <h1 class="h3 mb-1">Welcome, {{ current_user.name }}</h1>
+  <p class="text-body-secondary mb-0">Overview of upcoming jobs and inventory status.</p>
+</header>
+
+<section aria-label="Key figures" class="row g-3 mb-4" id="kpiRow"></section>
+
+<div class="row g-4">
+  <section class="col-lg-8" aria-labelledby="upcomingHeading">
+    <div class="card h-100">
+      <div class="card-header"><h2 class="h6 mb-0" id="upcomingHeading">Next open job files</h2></div>
+      <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0">
+          <caption class="visually-hidden">Open job files, earliest start first</caption>
+          <thead><tr>
+            <th scope="col">Job #</th><th scope="col">Customer</th>
+            <th scope="col">Starts</th><th scope="col">Status</th>
+          </tr></thead>
+          <tbody id="upcomingBody"></tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <section class="col-lg-4" aria-labelledby="lowHeading">
+    <div class="card h-100">
+      <div class="card-header"><h2 class="h6 mb-0" id="lowHeading">Critical stock</h2></div>
+      <ul class="list-group list-group-flush" id="lowList"></ul>
+    </div>
+  </section>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+{% endblock %}
