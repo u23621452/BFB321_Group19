@@ -24,6 +24,9 @@ def list_jobs():
             raise ApiError("status must be one of: " + ", ".join(JOB_STATUSES), 400)
         query = query.filter(Job.status == status)
 
+    # ?open=1 hides jobs that have already been fully issued
+    if request.args.get("open") == "1":
+        query = query.filter(Job.status != "issued")
     search = (request.args.get("search") or "").strip()
     if search:
         like = "%" + search + "%"
