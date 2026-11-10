@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% block title %}Log in{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-md-6 col-lg-4">
+    <div class="text-center mb-4">
+      <i class="bi bi-box-seam-fill fs-1 text-primary" aria-hidden="true"></i>
+      <h1 class="h3 mt-2">StockFlow Engine</h1>
+      <p class="text-body-secondary">Penbro Kelnick (Pty) Ltd</p>
+    </div>
+
+    <div class="card">
+      <div class="card-body">
+        <form id="loginForm" novalidate>
+          <div class="mb-3">
+            <label for="email" class="form-label">Email</label>
+            <input type="email" class="form-control" id="email" required autocomplete="username">
+          </div>
+          <div class="mb-3">
+            <label for="password" class="form-label">Password</label>
+            <input type="password" class="form-control" id="password" required autocomplete="current-password">
+          </div>
+          <div class="alert alert-danger d-none" id="loginError" role="alert"></div>
+          <button type="submit" class="btn btn-primary w-100" id="loginBtn">Log in</button>
+        </form>
+      </div>
+    </div>
+
+    <div class="card mt-3">
+      <div class="card-body small">
+        <p class="fw-semibold mb-1">Demo accounts (password: Password123)</p>
+        <ul class="mb-0 ps-3">
+          <li>reception@stockflow.test - opens job files</li>
+          <li>storeroom@stockflow.test - plans the queue</li>
+          <li>operator@stockflow.test - shop-floor picks</li>
+          <li>admin@stockflow.test - everything</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/login.js') }}"></script>
+{% endblock %}
