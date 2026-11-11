@@ -136,6 +136,27 @@ window.SF = window.SF || {};
     container.replaceChildren(item);
   };
 
+  /* ---------- Previous / Next buttons for paged lists ---------- */
+
+  // data is the API answer ({ page, pages, total, ... });
+  // goToPage(n) is called when a button is pressed.
+  SF.renderPager = function (container, data, goToPage) {
+    container.replaceChildren();
+    if (data.total === 0) { return; }
+
+    var previous = SF.el('button', { type: 'button', class: 'btn btn-sm btn-outline-secondary', text: '‹ Previous' });
+    var next = SF.el('button', { type: 'button', class: 'btn btn-sm btn-outline-secondary', text: 'Next ›' });
+    previous.disabled = data.page <= 1;
+    next.disabled = data.page >= data.pages;
+    previous.addEventListener('click', function () { goToPage(data.page - 1); });
+    next.addEventListener('click', function () { goToPage(data.page + 1); });
+
+    container.append(
+      SF.el('span', { class: 'small text-body-secondary',
+        text: 'Page ' + data.page + ' of ' + data.pages + ' · ' + data.total + ' total' }),
+      SF.el('div', { class: 'd-flex gap-2' }, [previous, next]));
+  };
+
   /* ---------- Log out button (in the navbar on every page) ---------- */
 
   document.addEventListener('DOMContentLoaded', function () {
