@@ -78,3 +78,26 @@ def test_menu_only_shows_pages_the_role_may_open(client, login):
     page = client.get("/dashboard").data
     assert b"Storeroom queue" in page
     assert b"Job files" not in page
+
+
+def test_inventory_page_is_open_to_everyone_who_logs_in(client, login):
+    for role in ("reception", "storeroom", "operator"):
+        login(role)
+        assert client.get("/inventory").status_code == 200
+
+
+def test_scanner_page_is_for_operator_and_storeroom(client, login):
+    for role in ("operator", "storeroom"):
+        login(role)
+        assert client.get("/scanner").status_code == 200
+
+    login("reception")
+    assert client.get("/scanner").status_code == 302
+
+
+def test_operator_menu(client, login):
+    login("operator")
+    page = client.get("/dashboard").data
+    assert b"Shop-floor scanner" in page
+    assert b"Inventory" in page
+    assert b"Job files" not in page
