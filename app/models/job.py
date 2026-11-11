@@ -16,8 +16,10 @@ class Job(AuditMixin, db.Model):
     status = db.Column(db.String(10), nullable=False, default="reserved")
     created_by = db.Column(db.Integer, db.ForeignKey("users.id"))
 
+    # order_by keeps the BOM lines in the order they were entered
     lines = db.relationship("JobLine", back_populates="job",
-                            cascade="all, delete-orphan")
+                            cascade="all, delete-orphan",
+                            order_by="JobLine.id")
 
     # the storeroom queue filters by status and start date a lot
     __table_args__ = (
