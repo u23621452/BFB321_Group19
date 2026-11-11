@@ -11,6 +11,8 @@ bp = Blueprint("pages", __name__)
 # endpoint, label, icon, roles that may open it (admin may open everything)
 PAGES = [
     ("pages.dashboard", "Dashboard", "house-door", ("reception", "storeroom", "operator")),
+    ("pages.job_files", "Job files", "journal-text", ("reception",)),
+    ("pages.queue", "Storeroom queue", "clock-history", ("storeroom", "reception")),
 ]
 
 
@@ -62,3 +64,15 @@ def login_page():
 @page_access("reception", "storeroom", "operator")
 def dashboard():
     return render_template("dashboard.html")
+
+
+@bp.get("/jobs")
+@page_access("reception")
+def job_files():
+    return render_template("job_files.html")
+
+
+@bp.get("/queue")
+@page_access("storeroom", "reception")
+def queue():
+    return render_template("queue.html")
