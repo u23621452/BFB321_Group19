@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block title %}Inventory{% endblock %}
+
+{% block content %}
+<header class="mb-4">
+  <h1 class="h3 mb-1">Inventory</h1>
+  <p class="text-body-secondary mb-0">Bin-level stock with soft reservations. Reorder points and suggested quantities come from the Python supply chain model.</p>
+</header>
+
+<div class="card">
+  <div class="card-header d-flex flex-wrap gap-2 justify-content-between align-items-center">
+    <h2 class="h6 mb-0">Stock on hand</h2>
+    <div class="d-flex gap-2">
+      <label for="invSearch" class="visually-hidden">Search inventory</label>
+      <input type="search" id="invSearch" class="form-control form-control-sm" placeholder="Search SKU or description…">
+      <label for="invStatus" class="visually-hidden">Filter by stock status</label>
+      <select id="invStatus" class="form-select form-select-sm">
+        <option value="">All stock</option>
+        <option value="critical">Critical</option>
+        <option value="low">Low</option>
+        <option value="ok">In stock</option>
+      </select>
+    </div>
+  </div>
+  <div class="table-responsive">
+    <table class="table table-hover align-middle mb-0">
+      <caption class="visually-hidden">Inventory by SKU</caption>
+      <thead><tr>
+        <th scope="col">SKU</th><th scope="col">Bin</th>
+        <th scope="col" class="text-end">On hand</th>
+        <th scope="col" class="text-end">Reserved</th>
+        <th scope="col" class="text-end">Available</th>
+        <th scope="col" class="text-end">Reorder pt</th>
+        <th scope="col" class="text-end">Suggested order</th>
+        <th scope="col">Status</th>
+      </tr></thead>
+      <tbody id="invBody"></tbody>
+    </table>
+  </div>
+  <div class="card-footer">
+    <div class="d-flex justify-content-between align-items-center" id="invPager"></div>
+    <div class="small text-body-secondary mt-2">
+      Reorder point = demand × lead time + safety stock (95 % service level).
+      Suggested order = EOQ rounded to supplier minimum and pack size.
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/inventory_page.js') }}"></script>
+{% endblock %}
