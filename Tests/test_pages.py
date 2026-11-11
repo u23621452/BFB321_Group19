@@ -51,3 +51,30 @@ def test_open_filter_hides_issued_jobs(client, login):
     data = client.get("/api/jobs?open=1&per_page=20").json
     assert data["total"] == 8                 # 9 jobs, one is issued
     assert all(job["status"] != "issued" for job in data["items"])
+    
+
+def test_job_files_page_is_for_reception(client, login):
+    login("reception")
+    assert client.get("/jobs").status_code == 200
+
+    for role in ("storeroom", "operator"):
+        login(role)
+        response = client.get("/jobs")
+        assert response.status_code == 302          # sent back to the dashboard
+        assert response.headers["Location"].endswith("/dashboard")
+
+
+def test_queue_page_is_for_storeroom_and_reception(client, login):
+    for role in ("storeroom", "reception"):
+        login(role)
+        assert client.get("/queue").status_code == 200
+
+    login("operator")
+    assert client.get("/queue").status_code == 302
+
+
+def test_menu_only_shows_pages_the_role_may_open(client, login):
+    login("storeroom")
+    page = client.get("/dashboard").data
+    assert b"Storeroom queue" in page
+    assert b"Job files" not in page
