@@ -13,6 +13,8 @@ PAGES = [
     ("pages.dashboard", "Dashboard", "house-door", ("reception", "storeroom", "operator")),
     ("pages.job_files", "Job files", "journal-text", ("reception",)),
     ("pages.queue", "Storeroom queue", "clock-history", ("storeroom", "reception")),
+    ("pages.inventory", "Inventory", "boxes", ("reception", "storeroom", "operator")),
+    ("pages.scanner", "Shop-floor scanner", "upc-scan", ("operator", "storeroom")),
 ]
 
 
@@ -76,3 +78,15 @@ def job_files():
 @page_access("storeroom", "reception")
 def queue():
     return render_template("queue.html")
+
+
+@bp.get("/inventory")
+@page_access("reception", "storeroom", "operator")
+def inventory():
+    return render_template("inventory.html")
+
+
+@bp.get("/scanner")
+@page_access("operator", "storeroom")
+def scanner():
+    return render_template("scanner.html")
