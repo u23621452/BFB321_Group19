@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+{% block title %}Storeroom queue{% endblock %}
+
+{% block content %}
+<header class="mb-4">
+  <h1 class="h3 mb-1">Storeroom queue</h1>
+  <p class="text-body-secondary mb-0">Advance view of scheduled jobs so shortages are caught days before assembly, not the afternoon before.</p>
+</header>
+
+<div class="d-flex flex-wrap gap-3 justify-content-between align-items-center mb-3">
+  <div class="btn-group" role="group" aria-label="Planning window">
+    <input type="radio" class="btn-check" name="window" id="win7" value="7" autocomplete="off" checked>
+    <label class="btn btn-outline-primary" for="win7">Next 7 days</label>
+    <input type="radio" class="btn-check" name="window" id="win14" value="14" autocomplete="off">
+    <label class="btn btn-outline-primary" for="win14">Next 14 days</label>
+  </div>
+  <div class="d-flex align-items-center gap-3">
+    <span class="text-body-secondary" id="queueCount" aria-live="polite"></span>
+    <div class="form-check form-switch mb-0">
+      <input class="form-check-input" type="checkbox" role="switch" id="onlyShort">
+      <label class="form-check-label" for="onlyShort">Shortages only</label>
+    </div>
+  </div>
+</div>
+
+<div class="card mb-4">
+  <div class="table-responsive">
+    <table class="table table-hover align-middle mb-0">
+      <caption class="visually-hidden">Scheduled jobs for the selected planning window</caption>
+      <thead><tr>
+        <th scope="col">Job #</th><th scope="col">Customer</th><th scope="col">Starts</th>
+        <th scope="col" class="text-end">In</th><th scope="col" class="text-end">Lines</th>
+        <th scope="col">Status</th><th scope="col" class="text-end">Action</th>
+      </tr></thead>
+      <tbody id="queueBody"></tbody>
+    </table>
+  </div>
+</div>
+
+<section aria-labelledby="alertHeading">
+  <div class="card">
+    <div class="card-header d-flex justify-content-between align-items-center">
+      <h2 class="h6 mb-0" id="alertHeading"><i class="bi bi-bell me-1" aria-hidden="true"></i>Shortage alerts for purchasing</h2>
+    </div>
+    <div class="table-responsive">
+      <table class="table align-middle mb-0">
+        <caption class="visually-hidden">Parts to order, with the date each order must be placed</caption>
+        <thead><tr>
+          <th scope="col">Part</th>
+          <th scope="col" class="text-end">Short by</th>
+          <th scope="col">Needed for</th>
+          <th scope="col">Needed by</th>
+          <th scope="col" class="text-end">Lead time</th>
+          <th scope="col" class="text-end">Suggested order</th>
+          <th scope="col">Order</th>
+        </tr></thead>
+        <tbody id="alertBody"></tbody>
+      </table>
+    </div>
+    <div class="card-footer small text-body-secondary">
+      Order by = start date minus the supplier lead time. If that date has already passed, the part has to be
+      expedited. Suggested order = economic order quantity from the supply chain model, rounded to the supplier's pack size.
+    </div>
+  </div>
+</section>
+
+{% include "_job_modal.html" %}
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/job_modal.js') }}"></script>
+<script src="{{ url_for('static', filename='js/queue_page.js') }}"></script>
+{% endblock %}
