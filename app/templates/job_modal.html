@@ -1,0 +1,29 @@
+{# Job detail pop-up, shared by several pages. Filled in by static/js/job_modal.js #}
+<div class="modal fade" id="jobModal" tabindex="-1" aria-labelledby="jobModalTitle" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 class="modal-title h5" id="jobModalTitle">Job detail</h2>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <p class="mb-3" id="jobModalMeta"></p>
+        <div class="table-responsive">
+          <table class="table table-sm align-middle">
+            <caption class="visually-hidden">Bill of materials with stock check</caption>
+            <thead><tr>
+              <th scope="col">SKU</th><th scope="col">Description</th>
+              <th scope="col" class="text-end">Required</th>
+              <th scope="col" class="text-end">Picked</th>
+              <th scope="col">Stock check</th>
+            </tr></thead>
+            <tbody id="jobModalLines"></tbody>
+          </table>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
