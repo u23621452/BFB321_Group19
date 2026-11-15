@@ -1,0 +1,68 @@
+erDiagram
+    USERS ||--o{ JOBS : "creates"
+    USERS ||--o{ STOCK_MOVEMENTS : "records"
+    USERS ||--o{ MATERIAL_REQUESTS : "raises"
+    JOBS ||--|{ JOB_LINES : "has BOM lines"
+    JOBS ||--o{ STOCK_MOVEMENTS : "issues stock to"
+    PRODUCTS ||--o{ JOB_LINES : "needed by"
+    PRODUCTS ||--o{ STOCK_MOVEMENTS : "moves"
+    PRODUCTS ||--o{ MATERIAL_REQUESTS : "requested as"
+
+    USERS {
+        int id PK
+        string name
+        string email UK
+        string password_hash
+        string role "reception, storeroom, operator, admin"
+    }
+    PRODUCTS {
+        int id PK
+        string sku UK
+        string description
+        string unit
+        string bin_location
+        int on_hand
+        float unit_cost
+        int lead_time_days
+        int min_order_qty
+        int pack_size
+        float daily_demand
+        float daily_demand_std
+        float annual_demand
+        float order_cost
+        float holding_cost
+    }
+    JOBS {
+        int id PK
+        string job_number UK
+        string customer
+        string description
+        date start_date
+        string priority
+        string status "reserved, shortage, kitting, issued"
+        int created_by FK
+    }
+    JOB_LINES {
+        int id PK
+        int job_id FK
+        int product_id FK
+        int qty
+        int picked_qty
+    }
+    STOCK_MOVEMENTS {
+        int id PK
+        int product_id FK
+        int job_id FK
+        int user_id FK
+        int qty
+        string kind
+        datetime created_at
+    }
+    MATERIAL_REQUESTS {
+        int id PK
+        int product_id FK
+        int requested_by FK
+        int qty
+        string note
+        string status
+    }
