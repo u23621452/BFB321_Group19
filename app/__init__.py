@@ -36,7 +36,7 @@ def create_app(config_name=None):
     register_error_handlers(app)
 
     from app.blueprints import auth, inventory, jobs, queue, picks, requests, kpis
-    from app import pages
+    from app import pages, api_docs
     app.register_blueprint(auth.bp)
     app.register_blueprint(inventory.bp)
     app.register_blueprint(jobs.bp)
@@ -45,5 +45,6 @@ def create_app(config_name=None):
     app.register_blueprint(requests.bp)
     app.register_blueprint(kpis.bp)
     app.register_blueprint(pages.bp)
+    app.register_blueprint(api_docs.bp)
 
     return app
