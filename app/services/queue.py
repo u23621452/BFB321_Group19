@@ -52,7 +52,10 @@ def shortage_summary(jobs, today):
         info = stock.inventory_row(product, reserved.get(product.id, 0))
         needed_by = date.fromisoformat(row["needed_by"])
         order_by = needed_by - timedelta(days=product.lead_time_days)
-        row["recommended_order_qty"] = info["order_qty"]
+                # the usual EOQ order, but never less than what the shortage needs
+        cover_shortage = sm.recommended_order_qty(
+            row["short_by"], product.min_order_qty, product.pack_size)
+        row["recommended_order_qty"] = max(info["order_qty"], cover_shortage)
         row["lead_time_days"] = product.lead_time_days
         row["order_by"] = order_by.isoformat()
         # if the order date has already passed, normal delivery is too slow
