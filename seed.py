@@ -120,7 +120,7 @@ def add_jobs(products, reception_user):
 def run():
     app = create_app()
     with app.app_context():
-        db.create_all()          # only creates tables that are missing
+        # The tables come from the migrations: run `python -m flask --app run db upgrade` first.
         wipe_old_data()
         users = add_users()
         products = add_products()
