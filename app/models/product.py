@@ -11,7 +11,7 @@ class Product(AuditMixin, db.Model):
     unit = db.Column(db.String(10), nullable=False, default="ea")
     bin_location = db.Column(db.String(20), nullable=False)
     on_hand = db.Column(db.Integer, nullable=False, default=0)
-    unit_cost = db.Column(db.Numeric(10, 2, asdecimal=False), nullable=False, default=0)
+    unit_cost = db.Column(db.DECIMAL(10, 2, asdecimal=False), nullable=False, default=0)
     lead_time_days = db.Column(db.Integer, nullable=False, default=7)
     min_order_qty = db.Column(db.Integer, nullable=False, default=1)
     pack_size = db.Column(db.Integer, nullable=False, default=1)
@@ -20,8 +20,8 @@ class Product(AuditMixin, db.Model):
     daily_demand = db.Column(db.Float, nullable=False, default=0)
     daily_demand_std = db.Column(db.Float, nullable=False, default=0)
     annual_demand = db.Column(db.Float, nullable=False, default=0)
-    order_cost = db.Column(db.Numeric(10, 2, asdecimal=False), nullable=False, default=0)
-    holding_cost = db.Column(db.Numeric(10, 2, asdecimal=False), nullable=False, default=0)
+    order_cost = db.Column(db.DECIMAL(10, 2, asdecimal=False), nullable=False, default=0)
+    holding_cost = db.Column(db.DECIMAL(10, 2, asdecimal=False), nullable=False, default=0)
 
     __table_args__ = (
         db.CheckConstraint("on_hand >= 0", name="ck_products_on_hand"),
