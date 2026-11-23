@@ -4,7 +4,7 @@ from flask_login import current_user
 from app.errors import ApiError
 from app.models import Job
 from app.models.job import JOB_STATUSES
-from app.schemas.job import clean_job
+from app.schemas.job import clean_job, clean_job_update
 from app.services import jobs as job_service
 from app.utils import role_required, get_page_params, paginate_query
 
@@ -58,3 +58,15 @@ def create_job():
     job = job_service.create_job(clean, current_user)
     shortages = job_service.shortages_by_job().get(job.id, [])
     return jsonify(job_service.job_to_dict(job, shortages)), 201
+
+@bp.patch("/<job_number>")
+@role_required("reception")
+def update_job(job_number):
+    """PATCH /api/jobs/<job_number>  - change start date, priority, customer or description."""
+    job = Job.query.filter_by(job_number=job_number).first()
+    if job is None:
+        raise ApiError("Job " + job_number + " was not found.", 404)
+    changes = clean_job_update(request.get_json(silent=True))
+    job_service.update_job(job, changes)
+    shortages = job_service.shortages_by_job().get(job.id, [])
+    return jsonify(job_service.job_to_dict(job, shortages))
