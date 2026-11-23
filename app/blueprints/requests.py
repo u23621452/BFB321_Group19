@@ -50,13 +50,15 @@ def list_requests():
     query = query.order_by(MaterialRequest.created_at.desc())
     return jsonify(paginate_query(query, page, per_page, request_to_dict))
 
-@bp.patch("/<int:request_id>")
+@bp.patch("/<request_id>")
 @role_required("storeroom")
 def update_request(request_id):
     """PATCH /api/requests/<id>  {status: "done"} - the storeroom closes a request."""
-    row = db.session.get(MaterialRequest, request_id)
+    row = None
+    if request_id.isdigit():
+        row = db.session.get(MaterialRequest, int(request_id))
     if row is None:
-        raise ApiError("Request " + str(request_id) + " was not found.", 404)
+        raise ApiError("Request " + request_id + " was not found.", 404)
     status = (request.get_json(silent=True) or {}).get("status")
     if status not in ("open", "done"):
         raise ApiError("Please fix the problems below.", 422,
