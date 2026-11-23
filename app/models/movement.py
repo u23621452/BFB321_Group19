@@ -32,3 +32,6 @@ class MaterialRequest(AuditMixin, db.Model):
     requested_by = db.Column(db.Integer, db.ForeignKey("users.id"))
 
     product = db.relationship("Product")
+    __table_args__ = (
+        db.CheckConstraint("qty > 0", name="ck_material_requests_qty"),
+    )

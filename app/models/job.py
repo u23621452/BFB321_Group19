@@ -43,4 +43,5 @@ class JobLine(AuditMixin, db.Model):
     __table_args__ = (
         db.UniqueConstraint("job_id", "product_id", name="uq_job_product"),
         db.CheckConstraint("qty > 0", name="ck_job_lines_qty"),
+        db.CheckConstraint("picked_qty >= 0", name="ck_job_lines_picked"),
     )

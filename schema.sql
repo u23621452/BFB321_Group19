@@ -8,15 +8,15 @@ CREATE TABLE products (
 	unit VARCHAR(10) NOT NULL, 
 	bin_location VARCHAR(20) NOT NULL, 
 	on_hand INTEGER NOT NULL, 
-	unit_cost FLOAT NOT NULL, 
+	unit_cost NUMERIC(10, 2) NOT NULL, 
 	lead_time_days INTEGER NOT NULL, 
 	min_order_qty INTEGER NOT NULL, 
 	pack_size INTEGER NOT NULL, 
 	daily_demand FLOAT NOT NULL, 
 	daily_demand_std FLOAT NOT NULL, 
 	annual_demand FLOAT NOT NULL, 
-	order_cost FLOAT NOT NULL, 
-	holding_cost FLOAT NOT NULL, 
+	order_cost NUMERIC(10, 2) NOT NULL, 
+	holding_cost NUMERIC(10, 2) NOT NULL, 
 	created_at DATETIME NOT NULL, 
 	updated_at DATETIME NOT NULL, 
 	PRIMARY KEY (id), 
@@ -63,6 +63,7 @@ CREATE TABLE material_requests (
 	created_at DATETIME NOT NULL, 
 	updated_at DATETIME NOT NULL, 
 	PRIMARY KEY (id), 
+	CONSTRAINT ck_material_requests_qty CHECK (qty > 0), 
 	FOREIGN KEY(product_id) REFERENCES products (id), 
 	FOREIGN KEY(requested_by) REFERENCES users (id)
 );
@@ -78,6 +79,7 @@ CREATE TABLE job_lines (
 	PRIMARY KEY (id), 
 	CONSTRAINT uq_job_product UNIQUE (job_id, product_id), 
 	CONSTRAINT ck_job_lines_qty CHECK (qty > 0), 
+	CONSTRAINT ck_job_lines_picked CHECK (picked_qty >= 0), 
 	FOREIGN KEY(job_id) REFERENCES jobs (id), 
 	FOREIGN KEY(product_id) REFERENCES products (id)
 );

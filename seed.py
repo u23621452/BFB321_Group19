@@ -3,6 +3,7 @@
 All names and numbers are made up for the demo. Running it again wipes the
 old demo data first, so it is safe to repeat.
 """
+import os
 from datetime import date, timedelta
 
 from app import create_app
@@ -53,7 +54,8 @@ USERS = [
     ("Olivia Operator", "operator@stockflow.test", "operator"),
     ("Admin User", "admin@stockflow.test", "admin"),
 ]
-DEMO_PASSWORD = "Password123"   # demo logins only
+# demo logins only; set DEMO_PASSWORD in .env to use a different one
+DEMO_PASSWORD = os.environ.get("DEMO_PASSWORD", "Password123")
 
 
 def wipe_old_data():

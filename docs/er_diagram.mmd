@@ -14,55 +14,66 @@ erDiagram
         string email UK
         string password_hash
         string role "reception, storeroom, operator, admin"
+        datetime created_at
+        datetime updated_at
     }
     PRODUCTS {
         int id PK
-        string sku UK
+        string sku UK "unique index"
         string description
         string unit
         string bin_location
-        int on_hand
-        float unit_cost
+        int on_hand "CHECK >= 0"
+        decimal unit_cost "DECIMAL(10,2)"
         int lead_time_days
         int min_order_qty
         int pack_size
         float daily_demand
         float daily_demand_std
         float annual_demand
-        float order_cost
-        float holding_cost
+        decimal order_cost "DECIMAL(10,2)"
+        decimal holding_cost "DECIMAL(10,2)"
+        datetime created_at
+        datetime updated_at
     }
     JOBS {
         int id PK
         string job_number UK
         string customer
         string description
-        date start_date
-        string priority
+        date start_date "index with status"
+        string priority "Normal, Urgent"
         string status "reserved, shortage, kitting, issued"
         int created_by FK
+        datetime created_at
+        datetime updated_at
     }
     JOB_LINES {
         int id PK
-        int job_id FK
-        int product_id FK
-        int qty
-        int picked_qty
+        int job_id FK "UK with product_id"
+        int product_id FK "UK with job_id"
+        int qty "CHECK > 0"
+        int picked_qty "CHECK >= 0"
+        datetime created_at
+        datetime updated_at
     }
     STOCK_MOVEMENTS {
         int id PK
-        int product_id FK
+        int product_id FK "index with created_at"
         int job_id FK
         int user_id FK
-        int qty
+        int qty "negative = stock out"
         string kind
-        datetime created_at
+        datetime created_at "index with product_id"
+        datetime updated_at
     }
     MATERIAL_REQUESTS {
         int id PK
         int product_id FK
         int requested_by FK
-        int qty
+        int qty "CHECK > 0"
         string note
-        string status
+        string status "open, done"
+        datetime created_at
+        datetime updated_at
     }
