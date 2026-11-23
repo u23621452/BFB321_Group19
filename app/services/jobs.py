@@ -3,6 +3,7 @@ import re
 from datetime import date
 
 from app.extensions import db
+from app.errors import ApiError
 from app.models import Product, Job, JobLine
 from app.services.stock import ACTIVE_STATUSES
 from models import stock_model as sm
@@ -65,6 +66,17 @@ def create_job(clean, user):
     db.session.commit()
     return job
 
+def update_job(job, changes):
+    """Apply a validated change to a job, then re-check every reservation,
+    because a new start date changes which job is served first."""
+    if job.status == "issued":
+        raise ApiError("Job " + job.job_number + " is already issued and cannot be changed.", 409)
+    for field, value in changes.items():
+        setattr(job, field, value)
+    db.session.flush()
+    refresh_statuses()
+    db.session.commit()
+    return job
 
 def job_to_dict(job, shortages=None, with_lines=True):
     """Turn a job into the dictionary we send to the browser."""
