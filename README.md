@@ -59,21 +59,19 @@ The flows are connected. A job created by reception appears in the storeroom's q
 | ![Inventory](docs/screenshots/07-inventory.png) | ![API docs](docs/screenshots/14-api-docs.png) |
 | Inventory with reservations | Swagger page for the API |
 
-### Loading, empty and error states
+### Empty and error states
 
-Every list and form handles the three states a user can meet:
+Every list and form handles the states a user can meet. When there is nothing to show, the table says so. When the server cannot be reached, it shows the problem with a **Try again** button.
 
-| Loading | Empty | Error (with retry) |
-|---|---|---|
-| ![Loading](docs/screenshots/10-state-loading.png) | ![Empty](docs/screenshots/08-state-empty.png) | ![Error](docs/screenshots/09-state-error.png) |
+| Empty | Error (with retry) |
+|---|---|
+| ![Empty](docs/screenshots/08-state-empty.png) | ![Error](docs/screenshots/09-state-error.png) |
 
-Phone view of the scanner (flow 3):
+Scanner page (flow 3):
 
 | Scanner | Pick panel | After confirming |
 |---|---|---|
 | ![Scanner](docs/screenshots/11-flow3-scanner.png) | ![Pick](docs/screenshots/12-scanner-pick.png) | ![Picked](docs/screenshots/13-scanner-picked.png) |
-
----
 
 ## Setup (runbook)
 
