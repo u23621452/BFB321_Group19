@@ -70,3 +70,47 @@ def clean_job(data):
 
     return {"customer": customer, "description": description,
             "start_date": start_date, "priority": priority, "lines": lines}
+
+def clean_job_update(data):
+    """Check a PATCH body. Only the fields that were sent are checked, and
+    only those are returned. Raises a 422 error that lists every problem."""
+    data = data or {}
+    allowed = ("customer", "description", "start_date", "priority")
+    problems = {}
+    changes = {}
+
+    if not any(key in data for key in allowed):
+        problems["body"] = "Send at least one of: " + ", ".join(allowed) + "."
+    for key in data:
+        if key not in allowed:
+            problems[key] = "This field cannot be changed."
+
+    if "customer" in data:
+        customer = str(data["customer"] or "").strip()
+        if not 3 <= len(customer) <= 80:
+            problems["customer"] = "Customer must be 3 to 80 characters."
+        changes["customer"] = customer
+
+    if "description" in data:
+        description = str(data["description"] or "").strip()
+        if not 1 <= len(description) <= 100:
+            problems["description"] = "Description must be 1 to 100 characters."
+        changes["description"] = description
+
+    if "start_date" in data:
+        try:
+            start_date = date.fromisoformat(str(data["start_date"] or ""))
+            if start_date < date.today():
+                problems["start_date"] = "Start date cannot be in the past."
+            changes["start_date"] = start_date
+        except ValueError:
+            problems["start_date"] = "Use the date format YYYY-MM-DD."
+
+    if "priority" in data:
+        if data["priority"] not in PRIORITIES:
+            problems["priority"] = "Priority must be Normal or Urgent."
+        changes["priority"] = data["priority"]
+
+    if problems:
+        raise ApiError("Please fix the problems below.", 422, problems)
+    return changes
