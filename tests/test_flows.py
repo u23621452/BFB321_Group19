@@ -190,3 +190,28 @@ def test_request_update_is_checked_and_protected(client, login):
     assert client.patch(url, json={"status": "banana"}).status_code == 422
     assert client.patch("/api/requests/9999", json={"status": "done"}).status_code == 404
     assert client.patch("/api/requests/abc", json={"status": "done"}).status_code == 404
+
+
+
+def test_a_database_conflict_becomes_a_clean_409(client, login, monkeypatch):
+    from sqlalchemy.exc import IntegrityError
+
+    def clash(*args, **kwargs):
+        raise IntegrityError("INSERT", {}, Exception("duplicate entry"))
+
+    monkeypatch.setattr("app.services.jobs.create_job", clash)
+    login("reception")
+    result = client.post("/api/jobs", json=job_body("GSKT-EPDM", 2))
+    assert result.status_code == 409
+    assert result.json["error"]["code"] == 409
+
+
+def test_an_unexpected_error_hides_the_details(client, login, monkeypatch):
+    def broken(*args, **kwargs):
+        raise RuntimeError("secret internal detail")
+
+    monkeypatch.setattr("app.services.jobs.create_job", broken)
+    login("reception")
+    result = client.post("/api/jobs", json=job_body("GSKT-EPDM", 2))
+    assert result.status_code == 500
+    assert "secret" not in result.get_data(as_text=True)

@@ -2,7 +2,10 @@
 {"error": {"code": 404, "message": "..."}}
 """
 from flask import jsonify, current_app
+from sqlalchemy.exc import IntegrityError
 from werkzeug.exceptions import HTTPException
+
+from app.extensions import db
 
 
 class ApiError(Exception):
@@ -25,14 +28,25 @@ def error_response(message, status, details=None):
 def register_error_handlers(app):
     @app.errorhandler(ApiError)
     def handle_api_error(err):
+        # undo anything half-written before the problem was found
+        db.session.rollback()
         return error_response(err.message, err.status, err.details)
 
     @app.errorhandler(HTTPException)
     def handle_http_error(err):
         return error_response(err.description, err.code)
 
+    @app.errorhandler(IntegrityError)
+    def handle_conflict(err):
+        # a unique or foreign key rule in the database was broken
+        db.session.rollback()
+        current_app.logger.warning("Database conflict: %s", err.orig)
+        return error_response("That conflicts with data that already exists.", 409)
+
     @app.errorhandler(Exception)
     def handle_unexpected_error(err):
+        # a failed write must not leave the session half-finished
+        db.session.rollback()
         # log the full problem for us, show the user something short
         current_app.logger.exception("Unhandled error: %s", err)
         return error_response("Something went wrong on the server.", 500)
