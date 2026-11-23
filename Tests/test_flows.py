@@ -103,3 +103,90 @@ def test_logging_out_closes_the_api(client, login):
     assert client.get("/api/kpis").status_code == 200
     client.post("/api/auth/logout")
     assert client.get("/api/kpis").status_code == 401
+
+
+
+def test_reception_can_change_a_job(client, login):
+    login("reception")
+    number = client.post("/api/jobs", json=job_body("GSKT-EPDM", 2)).json["job_number"]
+
+    changed = client.patch("/api/jobs/" + number,
+                           json={"priority": "Normal", "description": "Changed by test"})
+    assert changed.status_code == 200
+    assert changed.json["priority"] == "Normal"
+
+    # the change was saved, not just echoed back
+    again = client.get("/api/jobs/" + number).json
+    assert again["description"] == "Changed by test"
+    assert again["customer"] == "Flow Test Customer"       # untouched
+
+
+def test_moving_a_job_later_frees_stock_for_the_others(client, login):
+    login("reception")
+    before = kpis(client)["shortage_jobs"]
+    number = client.post("/api/jobs", json=job_body("GSKT-EPDM", 500)).json["job_number"]
+    while_first = kpis(client)["shortage_jobs"]
+    assert while_first > before          # it starts first, so it pushes later jobs short
+
+    later = (date.today() + timedelta(days=60)).isoformat()
+    moved = client.patch("/api/jobs/" + number, json={"start_date": later})
+    assert moved.status_code == 200
+
+    # now the earlier jobs are served first, so fewer jobs are short
+    assert kpis(client)["shortage_jobs"] < while_first
+
+
+def test_job_update_is_checked_and_protected(client, login):
+    login("reception")
+    number = client.post("/api/jobs", json=job_body("GSKT-EPDM", 2)).json["job_number"]
+    url = "/api/jobs/" + number
+
+    past = (date.today() - timedelta(days=1)).isoformat()
+    bad = client.patch(url, json={"start_date": past, "priority": "Low", "colour": "red"})
+    assert bad.status_code == 422
+    assert set(bad.json["error"]["details"]) == {"start_date", "priority", "colour"}
+
+    assert client.patch(url, json={}).status_code == 422
+    assert client.patch("/api/jobs/J-2026-9999", json={"priority": "Normal"}).status_code == 404
+
+    login("operator")
+    assert client.patch(url, json={"priority": "Normal"}).status_code == 403
+
+
+def test_an_issued_job_cannot_be_changed(client, login):
+    login("reception")
+    number = client.post("/api/jobs", json=job_body("GSKT-EPDM", 5)).json["job_number"]
+    login("operator")
+    client.post("/api/picks", json={"job_number": number, "sku": "GSKT-EPDM", "qty": 5})
+
+    login("reception")
+    result = client.patch("/api/jobs/" + number, json={"priority": "Normal"})
+    assert result.status_code == 409
+
+
+def test_storeroom_can_close_a_material_request(client, login):
+    login("operator")
+    request_id = client.post("/api/requests",
+                             json={"sku": "FST-M8", "qty": 3}).json["id"]
+
+    login("storeroom")
+    assert kpis(client)["open_requests"] == 1
+    done = client.patch("/api/requests/" + str(request_id), json={"status": "done"})
+    assert done.status_code == 200 and done.json["status"] == "done"
+
+    # it leaves the open list and the dashboard number drops
+    assert client.get("/api/requests?status=open").json["items"] == []
+    assert kpis(client)["open_requests"] == 0
+
+
+def test_request_update_is_checked_and_protected(client, login):
+    login("operator")
+    request_id = client.post("/api/requests",
+                             json={"sku": "FST-M8", "qty": 3}).json["id"]
+    url = "/api/requests/" + str(request_id)
+    assert client.patch(url, json={"status": "done"}).status_code == 403   # operators cannot close
+
+    login("storeroom")
+    assert client.patch(url, json={"status": "banana"}).status_code == 422
+    assert client.patch("/api/requests/9999", json={"status": "done"}).status_code == 404
+    assert client.patch("/api/requests/abc", json={"status": "done"}).status_code == 404
