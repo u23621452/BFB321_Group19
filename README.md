@@ -8,29 +8,27 @@ A web application for **Penbro Kelnick (Pty) Ltd**, a South African manufacturer
 ## Team
 
 | Member | Student number | GitHub |
-|---|---|---|
+
 | Heinrich Willem Fourie | u23621452 | [u23621452](https://github.com/u23621452) |
 | Tiaan Behr | u22710443 | [u22710443](https://github.com/u22710443) |
 
 ### Who led what
 
 | Member | Led |
-|---|---|
+
 | **Heinrich Willem Fourie** | The supply chain model (EOQ, safety stock, reorder point, reservation) and its unit tests. Database models, migrations, `schema.sql` and the ER diagram. Login, inventory, material request and queue endpoints. The job service with soft reservation, and the pick service and stock ledger. The base template, dashboard, job files and scanner pages. The OpenAPI description. Seed data. |
 | **Tiaan Behr** | Validation for jobs and picks. The jobs, picks and KPI endpoints. The storeroom queue with order-by dates. Central error handling and config. Test fixtures, and the pick, request, OpenAPI and integration tests. The login, queue and inventory pages and scripts. The shared JavaScript helpers and the job detail pop-up. The API docs and Swagger page. The schema generator script. |
 
 Both members committed across most areas (tests, pages, services and models), so the table shows who led each part. The commit history on GitHub (Insights, then Contributors) is the full record.
 
-> **About the data.** All jobs, customers and BOMs are made up. Stock items are *demo data modelled on a storeroom like Penbro Kelnick's*. The company did not allow us to use its data, so nothing here is confidential company data.
-
----
+> **About the data.** All jobs, customers and BOMs are made up. Stock items are *demo data modelled on a storeroom like Penbro Kelnick's*. The company did not allow us to use its data, so nothing here is confidential company data. The company's BOM's are a secret and they did not want us to use them so we just used demo data.
 
 ## What it does
 
 | Role | What they do in the app |
-|---|---|
+
 | **Reception** | Opens a job file with its Bill of Materials. Stock is *soft-reserved* immediately and any shortage is flagged. Can change a job's start date, priority, customer or description. |
-| **Storeroom** | Sees a 7- or 14-day queue of upcoming jobs, with shortage alerts, an **order-by date** (start date minus supplier lead time) and a suggested order quantity from the supply chain model. Closes material requests. |
+| **Storeroom** | Sees a 7- or 14-day queue of upcoming jobs, with shortage alerts, an **order-by date** (start date minus supplier lead time) and a suggested order quantity from the supply chain model. |
 | **Operator** | Uses a phone-friendly scanner page to confirm picks. Every pick writes a row to the stock ledger and updates the job. They can also request extra material. |
 | **Admin** | Can use everything. |
 
@@ -42,14 +40,13 @@ The supply chain logic (EOQ, safety stock at a 95 % service level, reorder point
 
 **2. The storeroom sees the shortage in the queue, with an order-by date.** The queue page lists jobs starting in the next 7 or 14 days. Short items show how many are missing, the date to order by, an "Expedite now" flag if that date has passed, and a suggested order quantity.
 
-**3. The operator confirms a pick on the shop floor and the ledger updates.** On a phone-width page the operator picks a work order, scans or types a code and confirms the quantity. Stock drops, a ledger row is written, the job status updates, and a pick that is more than the job needs is refused.
+**3. The operator confirms a pick on the shop floor and the ledger updates.** On a phone-width page the operator picks a work order, scans or types a code and confirms the quantity. Stock drops, a ledger row is written, the job status updates and a pick that is more than the job needs is refused.
 
 The flows are connected. A job created by reception appears in the storeroom's queue and on the operator's scanner, and a pick changes the inventory page and the dashboard numbers.
 
 ### Screenshots
 
-| | |
-|---|---|
+
 | ![Login](docs/screenshots/01-login.png) | ![Dashboard](docs/screenshots/02-dashboard.png) |
 | Login, with demo accounts | Dashboard KPIs |
 | ![Job file created](docs/screenshots/03-flow1-job-file-created.png) | ![Job detail](docs/screenshots/04-job-detail.png) |
@@ -64,13 +61,13 @@ The flows are connected. A job created by reception appears in the storeroom's q
 Every list and form handles the states a user can meet. When there is nothing to show, the table says so. When the server cannot be reached, it shows the problem with a **Try again** button.
 
 | Empty | Error (with retry) |
-|---|---|
+
 | ![Empty](docs/screenshots/08-state-empty.png) | ![Error](docs/screenshots/09-state-error.png) |
 
 Scanner page (flow 3):
 
 | Scanner | Pick panel | After confirming |
-|---|---|---|
+
 | ![Scanner](docs/screenshots/11-flow3-scanner.png) | ![Pick](docs/screenshots/12-scanner-pick.png) | ![Picked](docs/screenshots/13-scanner-picked.png) |
 
 ## Setup (runbook)
@@ -129,7 +126,7 @@ python app.py
 Open **http://127.0.0.1:5000** and log in with a demo account. The password for all four is `Password123` (set by `DEMO_PASSWORD` in `.env`):
 
 | Account | Role |
-|---|---|
+
 | `reception@stockflow.test` | opens job files |
 | `storeroom@stockflow.test` | plans the queue |
 | `operator@stockflow.test` | shop-floor picks |
@@ -160,7 +157,7 @@ There are **101 tests**: supply chain model unit tests, API tests for every endp
 Settings come from `config.py` (development, testing and production classes) and from a `.env` file. `.env.example` lists every setting and contains no secrets. The real `.env` is never committed.
 
 | Setting | Meaning |
-|---|---|
+
 | `APP_ENV` | `development`, `testing` or `production` |
 | `SECRET_KEY` | Signs the login session cookie. Use a long random value in production. |
 | `DATABASE_URL` | MySQL: `mysql+pymysql://user:password@localhost/stockflow`. SQLite is the fallback (`sqlite:///stockflow.db`). |
@@ -194,7 +191,7 @@ The app writes to `logs/stockflow.log` (rotating file, so it cannot fill the dis
 JSON over HTTP, under `/api`. Log in with `POST /api/auth/login`; a session cookie is then sent by the browser (Flask-Login). Lists are paginated with `?page=1&per_page=10` (maximum 100).
 
 | Method | Endpoint | Who | What it does |
-|---|---|---|---|
+
 | POST | `/api/auth/login` | anyone | Log in |
 | POST | `/api/auth/logout` | logged in | Log out |
 | GET | `/api/auth/me` | logged in | Current user |
@@ -252,19 +249,11 @@ docs/                   ER diagram, OpenAPI file, screenshots
 dist/                   semester front-end prototype (static site, unchanged)
 ```
 
-**Compared with the class sample project.** The class sample keeps routes, SQL and the connection in three files (`app.py`, `models.py`, `db.py`). We keep the same separation (routes never contain SQL, models never touch HTML) but split it by feature using Flask blueprints, which suits a larger application: routes in `app/blueprints/`, tables in `app/models/`, business rules in `app/services/`. The class layout's `app.py`, `requirements.txt`, `.env.example`, `schema.sql`, `templates/` and `static/` all exist here too; the templates sit in `app/templates/` because Flask looks for them next to the application package.
-
-`dist/`, `templates/`, `render.py` and `sample_data.py` are the **semester prototype** (a static Bootstrap build with sample data). The Flask application in `app/` is the final project.
-
 ## Limitations
 
 * **Automated tests run on SQLite.** The application itself was run and checked against MySQL 8 (migrations, seed data and the three flows), but the pytest suite uses an in-memory SQLite database.
 * **The camera scan is simulated.** The scanner page offers the next BOM line or accepts a typed code. A real barcode reader would plug into the same function.
 * **Demo data.** BOMs, customers and jobs are fictional. The company did not allow us to use its data.
 * **No goods receipt.** The app plans and issues material but does not record deliveries or stock-count corrections.
-* **Not deployed.** Running it in production would use a real WSGI server (for example Gunicorn behind Nginx), a strong `SECRET_KEY` and a production MySQL server. That setup was not part of this submission.
+* **Not deployed.** Running it in production would use a real WSGI server, a strong `SECRET_KEY` and a production MySQL server. That setup was not part of this submission.
 * **Bootstrap needs internet** because it loads from a CDN.
-
-## Report
-
-See the separate Extended Final Project Report submitted with this project.
